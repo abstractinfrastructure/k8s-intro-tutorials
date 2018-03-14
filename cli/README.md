@@ -318,6 +318,7 @@ $ kubectl logs mypod
 
 ### Exercise: The Basics
 **Objective:** Create a namespace and a pod, then use the basics to describe and delete it.
+
 **NOTE:** You should still be using the `minidev` context created earlier.
 
 1) Create the `dev` namespace
