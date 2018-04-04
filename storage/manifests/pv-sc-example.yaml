@@ -1,0 +1,15 @@
+kind: PersistentVolume
+apiVersion: v1
+metadata:
+  name: pv-sc-example
+  labels:
+    type: hostpath
+spec:
+  capacity:
+    storage: 2Gi
+  accessModes:
+    - ReadWriteMany
+  storageClassName: mypvsc
+  hostPath:
+    type: DirectoryOrCreate
+    path: "/data/mypvsc"

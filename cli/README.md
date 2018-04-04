@@ -1,6 +1,7 @@
 
 # Using the CLI
-The Kubernetes client, `kubectl` is the primary method of interacting with a Kubernetes cluster. Getting to know it is essential to using Kubernetes itself.
+The Kubernetes client, `kubectl` is the primary method of interacting with a Kubernetes cluster. Getting to know it
+is essential to using Kubernetes itself.
 
 
 ## Index
@@ -17,6 +18,8 @@ The Kubernetes client, `kubectl` is the primary method of interacting with a Kub
   * [kubectl logs](#kubectl-logs)
   * [Exercise: The Basics](#exercise-the-basics)
 * [Accessing the Cluster](#accessing-the-cluster)
+  * [kubectl exec](#kubectl-exec)
+  * [Exercise: Spawning a Shell in a Pod](#exercise-spawning-a-shell-in-a-pod)
   * [kubectl proxy](#kubectl-proxy)
   * [Dashboard](#dashboard)
   * [Exercise: Using the Proxy](#exercise-using-the-proxy)
@@ -27,7 +30,7 @@ The Kubernetes client, `kubectl` is the primary method of interacting with a Kub
 ---
 
 
-## Syntax Structure
+# Syntax Structure
 
 `kubectl` uses a common syntax for all operations in the form of:
 
@@ -48,20 +51,26 @@ $ kubectl get pod mypod
 $ kubectl delete pod mypod
 ```
 
+---
 
 [Back to Index](#index)
 
-
+---
 ---
 
 
-## Context and kubeconfig
-`kubectl` allows you to interact with and manage multiple Kubernetes clusters. To do this, it requires what is known as a `context`. A combination of `cluster`, `namespace` and `user`.
+# Context and kubeconfig
+`kubectl` allows you to interact with and manage multiple Kubernetes clusters. To do this, it requires what is known
+as a `context`. A combination of `cluster`, `namespace` and `user`.
 * **cluster** - A friendly name, server address, and certificate for the Kubernetes cluster.
-* **namespace (optional)** - The logical cluster or environment to use. If none is provided, it will use the default `default` namespace.
-* **user** - The credentials used to connect to the cluster. This can be a combination of client certificate and key, username/password, or token.
+* **namespace (optional)** - The logical cluster or environment to use. If none is provided, it will use the default
+`default` namespace.
+* **user** - The credentials used to connect to the cluster. This can be a combination of client certificate and key,
+username/password, or token.
 
-These contexts are stored in a local `yaml` based config file referred to as the `kubeconfig`. For `*nix` based systems, the `kubeconfig` is stored in `$HOME/.kube/config` for Windows, it can be found in `%USERPROFILE%/.kube/config`
+These contexts are stored in a local `yaml` based config file referred to as the `kubeconfig`. For `*nix` based
+systems, the `kubeconfig` is stored in `$HOME/.kube/config` for Windows, it can be
+found in `%USERPROFILE%/.kube/config`
 
 This config is viewable without having to view the file directly.
 
@@ -99,9 +108,7 @@ users:
     client-key: /Users/example/.minikube/client.key
 ```
 
-
 ---
-
 
 ### `kubectl config`
 
@@ -111,49 +118,65 @@ Managing all aspects of contexts is done via the `kubectl config` command. You c
 * Switch to using another one with the `kubectl config use-context <context-name>` command
 * Add a new one with the `kubectl config set-context <context name> --cluster=<cluster name> --user=<user> --namespace=<namespace>`
 
-There can be quite a few specifics involved when adding a context, for the available options, please see the [Configuring Multiple Clusters](https://kubernetes.io/docs/tasks/access-application-cluster/configure-access-multiple-clusters/) Kubernetes documentaiton.
-
+There can be quite a few specifics involved when adding a context, for the available options, please see the
+[Configuring Multiple Clusters](https://kubernetes.io/docs/tasks/access-application-cluster/configure-access-multiple-clusters/)
+Kubernetes documentation.
 
 ---
 
-
 ### Exercise: Using Contexts
 **Objective:** Create a new context called `minidev` and switch to it.
+
+---
 
 1. View the current contexts
 ```
 $ kubectl config get-contexts
 ```
+
 2. Create a new context called `minidev` within the `minikube` cluster with the `dev` namespace, as the `minikube` user
 ```
 $ kubectl config set-context minidev --cluster=minikube --user=minikube --namespace=dev
 ```
+
 3. View the newly added context
 ```
 kubectl config get-contexts
 ```
+
 4. Switch to the `minidev` context using `use-context`
 ```
 $ kubectl config use-context minidev
 ```
+
 5. View the current active context
 ```
 $ kubectl config current-context
 ```
 
+---
 
-[Back to Index](#index)
+**Summary:** content here
 
 
 ---
 
+[Back to Index](#index)
+
+---
+---
 
 ## Kubectl Basics
-There are several `kubectl` commands you will frequently use for any sort of day-to-day operations. `get`, `create`, `apply`, `delete`, `describe`, and `logs`.  Other commands can be listed simply with `kubectl help`, or `kubectl <command> --help`.
+There are several `kubectl` commands you will frequently use for any sort of day-to-day operations. `get`, `create`,
+`apply`, `delete`, `describe`, and `logs`.  Other commands can be listed simply with `kubectl help`, or
+`kubectl <command> --help`.
 
+---
 
 ### `kubectl get`
-`kubectl get` fetches and lists objects of a certain type or a specific object itself. It also supports outputting the information in several different useful formats including: `json`, `yaml`, `wide` (additional columns), or`name` (names only) via the `-o` or `--output` flag.
+`kubectl get` fetches and lists objects of a certain type or a specific object itself. It also supports outputting the
+information in several different useful formats including: `json`, `yaml`, `wide` (additional columns), or`name`
+(names only) via the `-o` or `--output` flag.
 
 **Command**
 ```
@@ -175,12 +198,11 @@ NAME      READY     STATUS    RESTARTS   AGE       IP           NODE
 mypod     1/1       Running   0          5m        172.17.0.6   minikube
 ```
 
-
 ---
 
-
 ### `kubectl create`
-`kubectl create` creates an object from a `json`/`yaml` manifest or `stdin`. The manifests can be specified with the `-f` or `--filename` flag that can point to either a file, or a directory containing multiple manifests.
+`kubectl create` creates an object from a `json`/`yaml` manifest or `stdin`. The manifests can be specified with
+the `-f` or `--filename` flag that can point to either a file, or a directory containing multiple manifests.
 
 **Command**
 ```
@@ -199,9 +221,13 @@ pod "mypod" created
 
 ---
 
-
 ### `kubectl apply`
-`kubectl apply` is similar to `kubectl create`, however it will essentially update the resource if it is already created, or simply create it if does not yet exist. When it updates the config, it will save the previous version of it in an `annotation` on the created object itself. **WARNING:** If the object was not created initially with `kubectl apply` it's updating behaviour will act as a two-way diff. For more information on this, please see the [kubectl apply](https://kubernetes.io/docs/concepts/cluster-administration/manage-deployment/#kubectl-apply) documentation.
+`kubectl apply` is similar to `kubectl create`, however it will essentially update the resource if it is already
+created, or simply create it if does not yet exist. When it updates the config, it will save the previous version of
+it in an `annotation` on the created object itself. **WARNING:** If the object was not created initially with
+`kubectl apply` it's updating behaviour will act as a two-way diff. For more information on this, please see the
+[kubectl apply](https://kubernetes.io/docs/concepts/cluster-administration/manage-deployment/#kubectl-apply)
+documentation.
 
 Just like `kubectl create` it takes a `json`/`yaml` manifest with the `-f` flag or accepts input from `stdin`.
 
@@ -219,7 +245,6 @@ pod "mypod" configured
 
 ---
 
-
 ### `kubectl delete`
 `kubectl delete` deletes the object from Kubernetes.
 
@@ -236,9 +261,9 @@ pod "mypod" deleted
 
 ---
 
-
 ### `kubectl describe`
-`kubectl describe` lists detailed information about the specific Kubernetes object. It is a very helpful troubleshooting tool.
+`kubectl describe` lists detailed information about the specific Kubernetes object. It is a very helpful
+troubleshooting tool.
 
 **Command**
 ```
@@ -293,12 +318,11 @@ Events:
   Normal  Started                5s    kubelet, minikube  Started container
   ```
 
-
 ---
 
-
 ### `kubectl logs`
-`kubectl logs` outputs the combined `stdout` and `stderr` logs from a pod. If more tha one container exist in a `pod` the `-c` flag is used and the container name must be specified.
+`kubectl logs` outputs the combined `stdout` and `stderr` logs from a pod. If more tha one container exist in a
+`pod` the `-c` flag is used and the container name must be specified.
 
 **Command**
 ```
@@ -315,11 +339,12 @@ $ kubectl logs mypod
 
 ---
 
-
 ### Exercise: The Basics
 **Objective:** Create a namespace and a pod, then use the basics to describe and delete it.
 
 **NOTE:** You should still be using the `minidev` context created earlier.
+
+---
 
 1) Create the `dev` namespace
 ```
@@ -346,18 +371,68 @@ kubectl describe pod mypod
 kubectl delete pod mypod
 ```
 
-[Back to Index](#index)
+---
 
+**Summary:** content here
 
 ---
 
+[Back to Index](#index)
 
-## Accessing the Cluster
+---
+---
 
-`kubectl` provides several mechanisms for accessing resources within the cluster remotely. For this tutorial, the focus will be on using `kubectl proxy` to gain access to the API and the API proxy.
+# Accessing the Cluster
+
+`kubectl` provides several mechanisms for accessing resources within the cluster remotely. For this tutorial, the focus
+will be on using `kubectl exec` to get a remote shell within a container, and `kubectl proxy` to gain access to the
+services exposed through the API proxy.
+
+--
+
+### `kubectl exec`
+`kubectl exec` executes a command within a Pod and can optionally spawn an interactive terminal within the remote Pod.
+When more than one container is present within a Pod, the `-c` or `--container` flag is required, followed by the
+container name.
+
+If an interactive session is desired, the `-i` (`--stdin`) and `-t` (`--tty`) flags must be supplied.
+
+**Command**
+```
+kubectl exec <pod name> -- <arg>
+kubectl exec <pod name> -c <container name> -- <arg>
+kubectl exec  -i -t <pod name> -c <container name> -- <arg>
+```
+
+
+**Example**
+```
+$ kubectl exec mypod -c nginx -- printenv
+PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
+HOSTNAME=mypod
+KUBERNETES_SERVICE_PORT_HTTPS=443
+KUBERNETES_PORT=tcp://10.96.0.1:443
+KUBERNETES_PORT_443_TCP=tcp://10.96.0.1:443
+KUBERNETES_PORT_443_TCP_PROTO=tcp
+KUBERNETES_PORT_443_TCP_PORT=443
+KUBERNETES_PORT_443_TCP_ADDR=10.96.0.1
+KUBERNETES_SERVICE_HOST=10.96.0.1
+KUBERNETES_SERVICE_PORT=443
+NGINX_VERSION=1.12.2
+HOME=/root
+$
+$ kubectl exec -i -t mypod -c nginx -- /bin/sh
+/ #
+/ # cat /etc/alpine-release
+3.5.2
+```
+
+---
 
 ### `kubectl proxy`
-`kubectl proxy` enables you to both access the Kubernetes API-Server or access a resource running with the cluster securely from your local computer. By default it creates a connection to the API-Server that can be accessed at `127.0.0.1:8001` or an alternative port by supplying the `-p` or `--port` flag.
+`kubectl proxy` enables you to both access the Kubernetes API-Server or access a resource running with the cluster
+securely from your local computer. By default it creates a connection to the API-Server that can be accessed at
+`127.0.0.1:8001` or an alternative port by supplying the `-p` or `--port` flag.
 
 
 **Command**
@@ -366,7 +441,7 @@ kubectl proxy
 kubectl proxy --port=<port>
 ```
 
-**Example**
+**Examples**
 ```
 $ kubectl proxy
 Starting to serve on 127.0.0.1:8001
@@ -386,7 +461,9 @@ $ curl 127.0.0.1:8001/version
 }
 ```
 
-The Kubernetes API-Server has the built in capability to proxy to running services or pods within the cluster. In conjunction with the `kubectl proxy` this allows you to access those services or pods without having to expose them outside of the cluster.
+The Kubernetes API-Server has the built in capability to proxy to running services or pods within the cluster. In
+conjunction with the `kubectl proxy` this allows you to access those services or pods without having to expose
+them outside of the cluster.
 
 ```
 http://<proxy_address>/api/v1/namespaces/<namespace>/<services|pod>/<service_name|pod_name>[:port_name]/proxy
@@ -402,23 +479,23 @@ http://<proxy_address>/api/v1/namespaces/<namespace>/<services|pod>/<service_nam
 http://127.0.0.1:8001/api/v1/namespaces/default/pods/mypod/proxy/
 http://127.0.0.1:8001/api/v1/namespaces/kube-system/services/kubernetes-dashboard/proxy/
 ```
-
-
 ---
-
 
 ### Dashboard
 
-While the Kubernetes Dashboard is not something that is required to be deployed in a cluster, it frequently is and is a handy tool to quickly explore the system; however it should not be relied upon for cluster support.
+While the Kubernetes Dashboard is not something that is required to be deployed in a cluster, it frequently is and is
+a handy tool to quickly explore the system; however it should not be relied upon for cluster support.
 
 ![Kubernetes Dashboard](images/dashboard.png)
 
-To access the dashboard you use the `kubectl proxy` command and acess the `kubernetes-dashboard` service within the `kube-system` namespace.
+To access the dashboard you use the `kubectl proxy` command and acess the `kubernetes-dashboard` service within the
+`kube-system` namespace.
 ```
 http://127.0.0.1:8001/api/v1/namespaces/kube-system/services/kubernetes-dashboard/proxy/
 ```
 
-Leaving the proxy up and going, may not be desirable for quick dev-work, so minikube itself has a command that will open the dashboard up in a new browser window through an exposed service on the minikube VM.
+Leaving the proxy up and going, may not be desirable for quick dev-work, so minikube itself has a command that will
+open the dashboard up in a new browser window through an exposed service on the minikube VM.
 
 **Command**
 ```
@@ -427,10 +504,10 @@ $ minikube dashboard
 
 ---
 
-
 ### Exercise: Using the Proxy
 **Objective:** Create a pod and access it through the proxy. Then access the dashboard via the minikube command.
 
+---
 
 1) Create the Pod `mypod` from the mypod manifest.
 ```
@@ -457,24 +534,37 @@ http://127.0.0.1:8001/api/v1/namespaces/kube-system/services/kubernetes-dashboar
 $ minikube proxy
 ```
 
+---
+
+**Summary:**
+
+
+---
 
 [Back to Index](#index)
 
-
+---
 ---
 
 
 ## Cleaning up
 To remove everything that was created in this tutorial, execute the following commands:
 ```
-kubectl delete pod mypod
-kubectl delete namespace dev
-kubectl config delete-context minidev
+$ kubectl delete namespace dev
+$ kubectl config delete-context minidev
 ```
+
+**NOTE:** If you are proceeding with the next tutorials, simply delete the pod with:
+```
+$ kubectl delete pod mypod
+```
+The namespace and context will be reused.
+
+---
 
 [Back to Index](#index)
 
-
+---
 ---
 
 
