@@ -287,7 +287,7 @@ application in place.
 **Objective:** Learn how to view the history of a Deployment and rollback to older revisions.
 
 **Note:** This exercise builds off the previous exercise: [Using Deployments](#exercise-using-deployments). If you
-have not, please complete that first before continuing.
+have not, complete it first before continuing.
 
 ---
 
@@ -434,8 +434,8 @@ $ kubectl get pods --show-labels --watch
 ```
 The old version of the DaemonSet will be phased out one at a time and instances of the new version will take its
 place. Similar to Deployments, DaemonSets have their own equivalent to a Deployment's `strategy` in the form of
-`updateStrategy`. The defaults are generally suitable, but other tuning options may be set. Please see the
-[updating DaemonSet documentation](https://kubernetes.io/docs/tasks/manage-daemon/update-daemon-set/#performing-a-rolling-update).
+`updateStrategy`. The defaults are generally suitable, but other tuning options may be set.For reference, see the
+[Updating DaemonSet Documentation](https://kubernetes.io/docs/tasks/manage-daemon/update-daemon-set/#performing-a-rolling-update).
 
 ---
 

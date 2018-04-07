@@ -10,6 +10,7 @@ spec:
   accessModes:
     - ReadWriteMany
   storageClassName: mypvsc
+  persistentVolumeReclaimPolicy: Delete
   hostPath:
     type: DirectoryOrCreate
-    path: "/data/mypvsc"
+    path: "/tmp/mypvsc"

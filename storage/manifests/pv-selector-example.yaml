@@ -9,6 +9,7 @@ spec:
     storage: 2Gi
   accessModes:
     - ReadWriteMany
+  persistentVolumeReclaimPolicy: Retain
   hostPath:
     type: DirectoryOrCreate
-    path: "/data/mypvsc"
+    path: "/tmp/mypvselector"

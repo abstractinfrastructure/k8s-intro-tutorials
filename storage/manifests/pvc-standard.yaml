@@ -1,11 +1,11 @@
 kind: PersistentVolumeClaim
 apiVersion: v1
 metadata:
-  name: pvc-sc-example
+  name: pvc-standard
 spec:
   accessModes:
     - ReadWriteMany
-  storageClassName: mypvsc
+  storageClassName: standard
   resources:
     requests:
       storage: 1Gi
