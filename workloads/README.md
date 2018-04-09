@@ -18,8 +18,8 @@ In **ALL CASES** a Pod Template is included, and acts as the base tier of manage
   * [Optional: Working with DaemonSet Revisions](#optional-working-with-daemonset-revisions)
 * [StatefulSets](#statefulsets)
   * [Exercise: Creating StatefulSets](#exercise-using-statefulsets)
-  * [Exercise: Understaing StatefulSet Network Identitify](#exercise-understaning-statefulset-netowrk-idenitity)
-* [Job and Cronjob](#job-and-cronjob)
+  * [Exercise: Understanding StatefulSet Network Identitify](#exercise-understaning-statefulset-netowrk-idenitity)
+* [Jobs and Cronjobs](#jobs-and-cronjobs)
   * [Exercise: Creating a Job](#exercise-creating-a-job)
   * [Exercise: Scheduling a CronJob](#exercise-scheduling-a-cronjob)
 * [Helpful Resources](#helpful-resources)
@@ -775,12 +775,11 @@ $ kubectl describe job job-example
 $ kubectl delete job job-example
 ```
 
-5) View the Pods once more.
+5) View the Pods once more passing the `--show-all` flag.
 ```
-$ kubectl get pods
+$ kubectl get pods --show-all
 ```
 The Pods will now be deleted. They are cleaned up when the job itself is removed.
-
 
 ---
 

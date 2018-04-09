@@ -5,7 +5,6 @@ form of data.
 
 For this task we have Volumes, Persistent Volumes, Persistent Volume Claims, and Storage Classes.
 
-
 # Index
 
 * [Before you Begin](#before-you-begin)
@@ -17,7 +16,6 @@ For this task we have Volumes, Persistent Volumes, Persistent Volume Claims, and
 * [Storage Classes](#storage-classes)
   * [Exercise: Exploring StorageClasses](#exercise-exploring-storageclasses)
 * [Helpful Resources](#helpful-resources)
-
 
 ---
 
