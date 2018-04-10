@@ -13,6 +13,7 @@ is essential to using Kubernetes itself.
   * [kubectl get](#kubectl-get)
   * [kubectl create](#kubectl-create)
   * [kubectl apply](#kubectl-apply)
+  * [kubectl edit](#kubectl-edit)
   * [kubectl delete](#kubectl-delete)
   * [kubectl describe](#kubectl-describe)
   * [kubectl logs](#kubectl-logs)
@@ -26,9 +27,7 @@ is essential to using Kubernetes itself.
 * [Cleaning up](#cleaning-up)
 * [Helpful Resources](#helpful-resources)
 
-
 ---
-
 
 # Syntax Structure
 
@@ -60,7 +59,7 @@ $ kubectl delete pod mypod
 
 
 # Context and kubeconfig
-`kubectl` allows you to interact with and manage multiple Kubernetes clusters. To do this, it requires what is known
+`kubectl` allows a user to interact with and manage multiple Kubernetes clusters. To do this, it requires what is known
 as a `context`. A combination of `cluster`, `namespace` and `user`.
 * **cluster** - A friendly name, server address, and certificate for the Kubernetes cluster.
 * **namespace (optional)** - The logical cluster or environment to use. If none is provided, it will use the default
@@ -68,9 +67,9 @@ as a `context`. A combination of `cluster`, `namespace` and `user`.
 * **user** - The credentials used to connect to the cluster. This can be a combination of client certificate and key,
 username/password, or token.
 
-These contexts are stored in a local `yaml` based config file referred to as the `kubeconfig`. For `*nix` based
-systems, the `kubeconfig` is stored in `$HOME/.kube/config` for Windows, it can be
-found in `%USERPROFILE%/.kube/config`
+These contexts are stored in a local `yaml` based config file referred to as the `kubeconfig`. For \*nix based
+systems, the `kubeconfig` is stored in `$HOME/.kube/config` for Windows, it can be found in
+`%USERPROFILE%/.kube/config`
 
 This config is viewable without having to view the file directly.
 
@@ -112,11 +111,11 @@ users:
 
 ### `kubectl config`
 
-Managing all aspects of contexts is done via the `kubectl config` command. You can:
+Managing all aspects of contexts is done via the `kubectl config` command. Some examples include can:
 * See the active context with `kubectl config current-context`
 * Get a list of available contexts with `kubectl config get-contexts`
-* Switch to using another one with the `kubectl config use-context <context-name>` command
-* Add a new one with the `kubectl config set-context <context name> --cluster=<cluster name> --user=<user> --namespace=<namespace>`
+* Switch to using another context with the `kubectl config use-context <context-name>` command
+* Add a new context with `kubectl config set-context <context name> --cluster=<cluster name> --user=<user> --namespace=<namespace>`
 
 There can be quite a few specifics involved when adding a context, for the available options, please see the
 [Configuring Multiple Clusters](https://kubernetes.io/docs/tasks/access-application-cluster/configure-access-multiple-clusters/)
@@ -129,35 +128,38 @@ Kubernetes documentation.
 
 ---
 
-1. View the current contexts
+1. View the current contexts.
 ```
 $ kubectl config get-contexts
 ```
 
-2. Create a new context called `minidev` within the `minikube` cluster with the `dev` namespace, as the `minikube` user
+2. Create a new context called `minidev` within the `minikube` cluster with the `dev` namespace, as the
+`minikube` user.
 ```
 $ kubectl config set-context minidev --cluster=minikube --user=minikube --namespace=dev
 ```
 
-3. View the newly added context
+3. View the newly added context.
 ```
 kubectl config get-contexts
 ```
 
-4. Switch to the `minidev` context using `use-context`
+4. Switch to the `minidev` context using `use-context`.
 ```
 $ kubectl config use-context minidev
 ```
 
-5. View the current active context
+5. View the current active context.
 ```
 $ kubectl config current-context
 ```
 
 ---
 
-**Summary:** content here
-
+**Summary:** Understanding and being able to switch between contexts is a base fundamental skill required by every
+Kubernetes user. As more clusters and namespaces are added, this can become unwieldy, and installing a helper
+application such as [kubectx](https://github.com/ahmetb/kubectx) can be quite helpful. Kubectx allows a user to quickly
+switch between contexts and namespaces without having to use the full `kubectl config use-context` command.
 
 ---
 
@@ -167,15 +169,15 @@ $ kubectl config current-context
 ---
 
 ## Kubectl Basics
-There are several `kubectl` commands you will frequently use for any sort of day-to-day operations. `get`, `create`,
-`apply`, `delete`, `describe`, and `logs`.  Other commands can be listed simply with `kubectl help`, or
+There are several `kubectl` commands that are frequently used for any sort of day-to-day operations. `get`, `create`,
+`apply`, `delete`, `describe`, and `logs`.  Other commands can be listed simply with `kubectl --help`, or
 `kubectl <command> --help`.
 
 ---
 
 ### `kubectl get`
 `kubectl get` fetches and lists objects of a certain type or a specific object itself. It also supports outputting the
-information in several different useful formats including: `json`, `yaml`, `wide` (additional columns), or`name`
+information in several different useful formats including: `json`, `yaml`, `wide` (additional columns), or `name`
 (names only) via the `-o` or `--output` flag.
 
 **Command**
@@ -201,7 +203,7 @@ mypod     1/1       Running   0          5m        172.17.0.6   minikube
 ---
 
 ### `kubectl create`
-`kubectl create` creates an object from a `json`/`yaml` manifest or `stdin`. The manifests can be specified with
+`kubectl create` creates an object from a json, yaml manifest or optionally `stdin`. The manifests can be specified with
 the `-f` or `--filename` flag that can point to either a file, or a directory containing multiple manifests.
 
 **Command**
@@ -225,11 +227,11 @@ pod "mypod" created
 `kubectl apply` is similar to `kubectl create`, however it will essentially update the resource if it is already
 created, or simply create it if does not yet exist. When it updates the config, it will save the previous version of
 it in an `annotation` on the created object itself. **WARNING:** If the object was not created initially with
-`kubectl apply` it's updating behaviour will act as a two-way diff. For more information on this, please see the
+`kubectl apply` it's updating behavior will act as a two-way diff. For more information on this, please see the
 [kubectl apply](https://kubernetes.io/docs/concepts/cluster-administration/manage-deployment/#kubectl-apply)
 documentation.
 
-Just like `kubectl create` it takes a `json`/`yaml` manifest with the `-f` flag or accepts input from `stdin`.
+Just like `kubectl create` it takes a json or yaml manifest with the `-f` flag or accepts input from `stdin`.
 
 **Command**
 ```
@@ -241,6 +243,25 @@ kubectl apply -f <path to manifest>
 $ kubectl apply -f manifests/mypod.yaml
 Warning: kubectl apply should be used on resource created by either kubectl create --save-config or kubectl apply
 pod "mypod" configured
+```
+
+---
+
+### `kubectl edit`
+`kubectl edit` modifies a resource in place without having to apply an updated manifest. It fetches a copy of the
+desired object and opens it locally with the configured text editor, set by the `KUBE_EDITOR` or `EDITOR` Environment
+Variables. This command is useful for troubleshooting, but should be avoided in production scenarios as the changes
+will essentially be untracked.
+
+**Command**
+```
+$ kubectl edit <type> <object name>
+```
+
+**Examples**
+```
+kubectl edit pod mypod
+kubectl edit service myservice
 ```
 
 ---
@@ -321,7 +342,7 @@ Events:
 ---
 
 ### `kubectl logs`
-`kubectl logs` outputs the combined `stdout` and `stderr` logs from a pod. If more tha one container exist in a
+`kubectl logs` outputs the combined `stdout` and `stderr` logs from a pod. If more than one container exist in a
 `pod` the `-c` flag is used and the container name must be specified.
 
 **Command**
@@ -340,7 +361,8 @@ $ kubectl logs mypod
 ---
 
 ### Exercise: The Basics
-**Objective:** Create a namespace and a pod, then use the basics to describe and delete it.
+**Objective:** Explore the basics. Create a namespace, a pod, then use the `kubectl` commands to describe and delete
+what was created.
 
 **NOTE:** You should still be using the `minidev` context created earlier.
 
@@ -351,29 +373,30 @@ $ kubectl logs mypod
 kubectl create namespace dev
 ```
 
-2) Apply the `mypod.yaml` manifest in the manifests folder
+2) Apply the manifest `manifests/mypod.yaml`.
 ```
 kubectl apply -f manifests/mypod.yaml
 ```
 
-3) Get the `yaml` output of the created pod `mypod`
+3) Get the yaml output of the created pod `mypod`.
 ```
 kubectl get pod mypod -o yaml
 ```
 
-4) Describe the pod `mypod`
+4) Describe the pod `mypod`.
 ```
 kubectl describe pod mypod
 ```
 
-5) Clean up the pod by deleting it
+5) Clean up the pod by deleting it.
 ```
 kubectl delete pod mypod
 ```
 
 ---
 
-**Summary:** content here
+**Summary:** The `kubectl` _"CRUD"_ commands are used frequently when interacting with a Kubernetes cluster. These
+simple tasks become 2nd nature as more experience is gained.
 
 ---
 
@@ -391,9 +414,9 @@ services exposed through the API proxy.
 --
 
 ### `kubectl exec`
-`kubectl exec` executes a command within a Pod and can optionally spawn an interactive terminal within the remote Pod.
-When more than one container is present within a Pod, the `-c` or `--container` flag is required, followed by the
-container name.
+`kubectl exec` executes a command within a Pod and can optionally spawn an interactive terminal within a remote
+container. When more than one container is present within a Pod, the `-c` or `--container` flag is required, followed
+by the container name.
 
 If an interactive session is desired, the `-i` (`--stdin`) and `-t` (`--tty`) flags must be supplied.
 
@@ -402,6 +425,7 @@ If an interactive session is desired, the `-i` (`--stdin`) and `-t` (`--tty`) fl
 kubectl exec <pod name> -- <arg>
 kubectl exec <pod name> -c <container name> -- <arg>
 kubectl exec  -i -t <pod name> -c <container name> -- <arg>
+kubectl exec  -it <pod name> -c <container name> -- <arg>
 ```
 
 
@@ -430,8 +454,8 @@ $ kubectl exec -i -t mypod -c nginx -- /bin/sh
 ---
 
 ### `kubectl proxy`
-`kubectl proxy` enables you to both access the Kubernetes API-Server or access a resource running with the cluster
-securely from your local computer. By default it creates a connection to the API-Server that can be accessed at
+`kubectl proxy` enables access to both the Kubernetes API-Server or to a resource running within the cluster
+securely from `kubectl`. By default it creates a connection to the API-Server that can be accessed at
 `127.0.0.1:8001` or an alternative port by supplying the `-p` or `--port` flag.
 
 
@@ -461,17 +485,17 @@ $ curl 127.0.0.1:8001/version
 }
 ```
 
-The Kubernetes API-Server has the built in capability to proxy to running services or pods within the cluster. In
-conjunction with the `kubectl proxy` this allows you to access those services or pods without having to expose
-them outside of the cluster.
+The Kubernetes API-Server has the built in capability to proxy to running services or pods within the cluster. This
+ability in conjunction with the `kubectl proxy` command allows a user to access those services or pods without having
+to expose them outside of the cluster.
 
 ```
 http://<proxy_address>/api/v1/namespaces/<namespace>/<services|pod>/<service_name|pod_name>[:port_name]/proxy
 ```
 * **proxy_address** - The local proxy address - `127.0.0.1:8001`
-* **namespace** - The namespace that the resource you wish to proxy to exists in
+* **namespace** - The namespace owning the resources to proxy to.
 * **service|pod** - The type of resource you are trying to access, either `service` or `pod`.
-* **service_name|pod_name** - The name of the `service` or `pod` you are trying to access..
+* **service_name|pod_name** - The name of the `service` or `pod` to be accessed.
 * **[:port]** - An optional port to proxy to. Will default to the first one exposed.
 
 **Example**
@@ -488,14 +512,14 @@ a handy tool to quickly explore the system; however it should not be relied upon
 
 ![Kubernetes Dashboard](images/dashboard.png)
 
-To access the dashboard you use the `kubectl proxy` command and acess the `kubernetes-dashboard` service within the
+To access the dashboard use the `kubectl proxy` command and access the `kubernetes-dashboard` service within the
 `kube-system` namespace.
 ```
 http://127.0.0.1:8001/api/v1/namespaces/kube-system/services/kubernetes-dashboard/proxy/
 ```
 
-Leaving the proxy up and going, may not be desirable for quick dev-work, so minikube itself has a command that will
-open the dashboard up in a new browser window through an exposed service on the minikube VM.
+Leaving the proxy up and going may not be desirable for quick dev-work. Minikube itself has a command that will
+open the dashboard up in a new browser window through an exposed service on the Minikube VM.
 
 **Command**
 ```
@@ -505,11 +529,11 @@ $ minikube dashboard
 ---
 
 ### Exercise: Using the Proxy
-**Objective:** Create a pod and access it through the proxy. Then access the dashboard via the minikube command.
+**Objective:** Examine the capabilities of the proxy by accessing a pod's exposed ports and using the dashboard.
 
 ---
 
-1) Create the Pod `mypod` from the mypod manifest.
+1) Create the Pod `mypod` from the manifest `manifests/mypod.yaml`.
 ```
 $ kubectl create -f manifests/mypod.yaml
 ```
@@ -529,14 +553,15 @@ http://127.0.0.1:8001/api/v1/namespaces/dev/pods/mypod/proxy/
 http://127.0.0.1:8001/api/v1/namespaces/kube-system/services/kubernetes-dashboard/proxy/
 ```
 
-5) Access the Dashboard through minikube.
+5) Lastly, access the Dashboard through minikube.
 ```
 $ minikube proxy
 ```
 
 ---
 
-**Summary:**
+**Summary:** Being able to access the exposed Pods and Services within a cluster without having to consume an
+external IP, or create firewall rules is an incredibly useful tool for troubleshooting cluster services.
 
 
 ---
@@ -567,11 +592,10 @@ The namespace and context will be reused.
 ---
 ---
 
-
 ### Helpful Resources
 * [kubectl Overview](https://kubernetes.io/docs/reference/kubectl/overview/)
-* [kubectl cheat sheet](https://kubernetes.io/docs/reference/kubectl/cheatsheet/)
-* [kubectl reference](https://kubernetes.io/docs/reference/generated/kubectl/kubectl-commands)
+* [kubectl Cheat Sheet](https://kubernetes.io/docs/reference/kubectl/cheatsheet/)
+* [kubectl Reference](https://kubernetes.io/docs/reference/generated/kubectl/kubectl-commands)
 * [Accessing Clusters](https://kubernetes.io/docs/tasks/access-application-cluster/access-cluster/)
 
 

@@ -1,7 +1,7 @@
 # Exploring the Core
 
 This tutorial covers the  fundamental building blocks that make up Kubernetes. Understanding what these components are
-and how they are used is crucial to learning how to use the higher level objects and resources.
+and how they are used is crucial to learning how to use the more powerful higher level objects and resources.
 
 # Index
 * [Namespaces](#namespaces)
@@ -18,9 +18,7 @@ and how they are used is crucial to learning how to use the higher level objects
 * [Cleaning up](#cleaning-up)
 * [Helpful Resources](#helpful-resources)
 
-
 ---
-
 
 # Namespaces
 Namespaces are a logical cluster or environment. They are the primary method of partitioning a cluster or scoping
@@ -58,10 +56,9 @@ $ kubectl config use-context minidev
 
 ---
 
-**Summary:** You should now be comfortable with creating and switching between Namespaces. While creating one is quick
-and easy, they are essential in the general usage of Kubernetes. They act as the primary method of providing scoped
-names and access as well as resource restrictions.
-
+**Summary:** Namespaces function as the primary method of providing scoped names, access, and act as an umbrella for
+group based resource restriction. Creating and switching between them is quick and easy, but learning to use them is
+essential in the general usage of Kubernetes.
 
 ---
 
@@ -82,8 +79,8 @@ Server proxy.
 
 ---
 
-1) Create a simple pod called `pod-example` using the `nginx:stable-alpine` image and expose port `80`. You may use
-the manifest `manifests/pod-example.yaml` or the `yaml` below.
+1) Create a simple pod called `pod-example` using the `nginx:stable-alpine` image and expose port `80`. The manifest
+`manifests/pod-example.yaml` or the yaml below may be used.
 
 **Command**
 ```
@@ -120,10 +117,10 @@ $ kubectl proxy
 http://127.0.0.1:8001/api/v1/namespaces/dev/pods/pod-example/proxy/
 ```
 
-You should see the default **"Welcome to nginx!"** page.
+The default **"Welcome to nginx!"** page should now be visible.
 
 5) Using the same steps as above, create a new pod called `multi-container-example` using the manifest
-in `manifests/pod-multi-container-example.yaml` or create a new one yourself with the below `yaml`.
+in `manifests/pod-multi-container-example.yaml` or create a new one yourself with the below yaml.
 
 **Command**
 ```
@@ -170,14 +167,13 @@ $ kubectl proxy
 http://127.0.0.1:8001/api/v1/namespaces/dev/pods/multi-container-example/proxy/
 ```
 
-You should see a date timestamp repeating over and over again.
+There should be a repeating date-time-stamp.
 
 ---
 
-**Summary:** You should be familiar with creating and viewing the general aspects of a Pod. It is rare that you
-would manage Pods directly within Kubernetes, but the knowledge of how to view, access and describe them is important
-and a common first-step in troubleshooting a possible Pod failure.
-
+**Summary:** Becoming familiar with creating and viewing the general aspects of a Pod is an important skill. While it
+is rare that one would manage Pods directly within Kubernetes, the knowledge of how to view, access and describe them
+is important and a common first-step in troubleshooting a possible Pod failure.
 
 ---
 
@@ -276,10 +272,9 @@ $ kubectl get pods -l 'app in (nginx), environment notin (prod)'
 
 ---
 
-**Summary:** Kubernetes makes heavy use of labels and selectors in near every aspect of it. You should now be familiar
-with both labels and selectors via `kubectl`. The usage of selectors may seem limited from the cli, but the concept
-can be extended to when it is used with higher level resources and objects.
-
+**Summary:** Kubernetes makes heavy use of labels and selectors in near every aspect of it. The usage of selectors
+may seem limited from the cli, but the concept can be extended to when it is used with higher level resources and
+objects.
 
 ---
 
@@ -327,7 +322,7 @@ spec:
 $ kubectl describe service clusterip
 ```
 
-3) View the service through `kube proxy` and refresh several times. You should see pages being served up by both pods.
+3) View the service through `kube proxy` and refresh several times. It should serve up pages from both pods.
 
 **Command**
 ```
@@ -348,8 +343,8 @@ It should return a valid response with the IP matching what was noted earlier wh
 ---
 
 **Summary:** The `ClusterIP` service is the most commonly used service within Kubernetes. Every `ClusterIP` service
-is given a cluster unique IP and DNS name that maps to one or more pod `Endpoints`. It is the primary method in which
-you create and access your pods **within** a Kubernetes Cluster.
+is given a cluster unique IP and DNS name that maps to one or more pod `Endpoints`. It function as the main method in
+which exposed Pod services are consumed **within** a Kubernetes Cluster.
 
 ---
 
@@ -464,7 +459,7 @@ spec:
 $ kubectl describe service loadbalancer
 ```
 
-3) Open a browser and visit the IP noted in the `Loadbalancer Ingress` field. It should direct you to the exposed
+3) Open a browser and visit the IP noted in the `Loadbalancer Ingress` field. It should direct map to the exposed
 service.
 
 4) Use the `minikube service` command to open the `NodePort` portion of the `loadbalancer` in a new browser window.
@@ -544,7 +539,6 @@ $ kubectl config use-context minikube
 * [Pod Object Spec](#https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.9/#podspec-v1-core)
 * [Labels and Selectors](https://kubernetes.io/docs/concepts/overview/working-with-objects/labels/)
 * [Concepts: Service Networking](https://kubernetes.io/docs/concepts/services-networking/service/)
-
 
 ---
 

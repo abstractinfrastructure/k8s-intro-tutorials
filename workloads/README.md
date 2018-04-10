@@ -266,7 +266,7 @@ $ kubectl get rs --show-labels
 Note that there is **NO** new ReplicaSet generated. Scaling actions do **NOT** trigger a change in the Pod Template.
 
 12) Just as before, describe the Deployment, ReplicaSet and one of the Pods. Note the `Events` and `Controlled By`
-fields. It should give you a clear picture of relationship between objects during an update of a Deployment.
+fields. It should present a clear picture of relationship between objects during an update of a Deployment.
 ```
 $ kubectl describe deploy deploy-example
 $ kubectl describe rs deploy-example-<safe-pod-template-hash>
@@ -491,7 +491,7 @@ updating the DaemonSet cluster wide, cycling through hosts one-by-one.
 
 ---
 
-**Summary:** Being able to use the `rollout` command with DaemonSets is import in scenarios where you may have
+**Summary:** Being able to use the `rollout` command with DaemonSets is import in scenarios where one may have
 to quickly go back to a previously known-good version. This becomes even more important for 'infrastructure' like
 services such as Pod Networking.
 
@@ -579,7 +579,7 @@ the `controller-revision-hash` label. This serves the same purpose as the `contr
 DaemonSet or the `pod-template-hash` in a Deployment. It provides a means of tracking the revision of the Pod
 Template and enables rollback functionality.
 
-3) You can glean more information about the state of your StatefulSet by describing it.
+3) More information can be gleaned about the state of the StatefulSet by describing it.
 ```
 $ kbuectl describe statefulset sts-example
 ```
@@ -615,7 +615,7 @@ $ kubectl delete statefulset sts-example
 ```
 $ kubectl get pvc
 ```
-Created PVCs are **NOT** garbage collected automatically when you delete a StatefulSet. They must be deleted
+Created PVCs are **NOT** garbage collected automatically when a StatefulSet is deleted. They must be reclaimed
 independently of the StatefulSet itself.
 
 8) Recreate the StatefulSet using the same manifest.
@@ -831,7 +831,7 @@ spec:
 ```
 $ kubectl get jobs
 ```
-You should see at least one job named in the format `<cronjob-name>-<unix time stamp>`. Note the timestamp of
+There should be at least one job named in the format `<cronjob-name>-<unix time stamp>`. Note the timestamp of
 the oldest job.
 
 3) Give it a few minutes and list the jobs once again
