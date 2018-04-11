@@ -20,7 +20,7 @@ is essential to using Kubernetes itself.
   * [Exercise: The Basics](#exercise-the-basics)
 * [Accessing the Cluster](#accessing-the-cluster)
   * [kubectl exec](#kubectl-exec)
-  * [Exercise: Spawning a Shell in a Pod](#exercise-spawning-a-shell-in-a-pod)
+  * [Exercise: Executing Commands within a Remote Pod](#exercise-executing-commands-within-a-remote-pod)
   * [kubectl proxy](#kubectl-proxy)
   * [Dashboard](#dashboard)
   * [Exercise: Using the Proxy](#exercise-using-the-proxy)
@@ -37,10 +37,10 @@ is essential to using Kubernetes itself.
 kubectl <command> <type> <name> <flags>
 ```
 
-* **command** - The command or operation to perform. e.g. `apply`, `create`, `delete`, and `get`
-* **type** - The resource type or object
-* **name** - The name of the resource or object
-* **flags** - Optional flags to pass to the command
+* **command** - The command or operation to perform. e.g. `apply`, `create`, `delete`, and `get`.
+* **type** - The resource type or object.
+* **name** - The name of the resource or object.
+* **flags** - Optional flags to pass to the command.
 
 **Examples**
 ```
@@ -60,14 +60,14 @@ $ kubectl delete pod mypod
 
 # Context and kubeconfig
 `kubectl` allows a user to interact with and manage multiple Kubernetes clusters. To do this, it requires what is known
-as a `context`. A combination of `cluster`, `namespace` and `user`.
+as a context. A context consists of a combination of `cluster`, `namespace` and `user`.
 * **cluster** - A friendly name, server address, and certificate for the Kubernetes cluster.
 * **namespace (optional)** - The logical cluster or environment to use. If none is provided, it will use the default
 `default` namespace.
 * **user** - The credentials used to connect to the cluster. This can be a combination of client certificate and key,
 username/password, or token.
 
-These contexts are stored in a local `yaml` based config file referred to as the `kubeconfig`. For \*nix based
+These contexts are stored in a local yaml based config file referred to as the `kubeconfig`. For \*nix based
 systems, the `kubeconfig` is stored in `$HOME/.kube/config` for Windows, it can be found in
 `%USERPROFILE%/.kube/config`
 
@@ -111,11 +111,11 @@ users:
 
 ### `kubectl config`
 
-Managing all aspects of contexts is done via the `kubectl config` command. Some examples include can:
-* See the active context with `kubectl config current-context`
-* Get a list of available contexts with `kubectl config get-contexts`
-* Switch to using another context with the `kubectl config use-context <context-name>` command
-* Add a new context with `kubectl config set-context <context name> --cluster=<cluster name> --user=<user> --namespace=<namespace>`
+Managing all aspects of contexts is done via the `kubectl config` command. Some examples include:
+* See the active context with `kubectl config current-context`.
+* Get a list of available contexts with `kubectl config get-contexts`.
+* Switch to using another context with the `kubectl config use-context <context-name>` command.
+* Add a new context with `kubectl config set-context <context name> --cluster=<cluster name> --user=<user> --namespace=<namespace>`.
 
 There can be quite a few specifics involved when adding a context, for the available options, please see the
 [Configuring Multiple Clusters](https://kubernetes.io/docs/tasks/access-application-cluster/configure-access-multiple-clusters/)
@@ -157,7 +157,7 @@ $ kubectl config current-context
 ---
 
 **Summary:** Understanding and being able to switch between contexts is a base fundamental skill required by every
-Kubernetes user. As more clusters and namespaces are added, this can become unwieldy, and installing a helper
+Kubernetes user. As more clusters and namespaces are added, this can become unwieldy. Installing a helper
 application such as [kubectx](https://github.com/ahmetb/kubectx) can be quite helpful. Kubectx allows a user to quickly
 switch between contexts and namespaces without having to use the full `kubectl config use-context` command.
 
@@ -177,7 +177,7 @@ There are several `kubectl` commands that are frequently used for any sort of da
 
 ### `kubectl get`
 `kubectl get` fetches and lists objects of a certain type or a specific object itself. It also supports outputting the
-information in several different useful formats including: `json`, `yaml`, `wide` (additional columns), or `name`
+information in several different useful formats including: json, yaml, wide (additional columns), or name
 (names only) via the `-o` or `--output` flag.
 
 **Command**
@@ -453,6 +453,50 @@ $ kubectl exec -i -t mypod -c nginx -- /bin/sh
 
 ---
 
+### Exercise: Executing Commands within a Remote Pod
+**Objective:** Use `kubectl exec` to both initiate commands and spawn an interactive shell within a Pod.
+
+---
+
+1) If not already created, create the Pod `mypod` from the manifest `manifests/mypod.yaml`.
+```
+$ kubectl create -f manifests/mypod.yaml
+```
+
+2) Wait for the Pod to become ready.
+```
+$ kubectl get pods --watch
+```
+
+3) Use `kubectl exec` to `cat` the file `/etc/os-release`.
+```
+$ kubectl exec mypod -- cat /etc/os-release
+```
+It should output the contents of the `os-release` file.
+
+4) Now use `kubectl exec` and supply the `-i -t` flags to spawn a shell session.
+```
+$ kubectl exec -i -t mypod -- /bin/sh
+```
+If executed correctly, it should drop you into a new shell session within the nginx container.
+
+5) use `ps aux` to view the current processes within the container.
+```
+/ # ps aux
+```
+There should be two nginx processes along with a `/bin/sh` process representing your interactive shell.
+
+6) Exit out of the container simply by typing `exit`.
+With that the shell process will be terminated and the only running processes within the container should
+once again be nginx and its worker process.
+
+---
+
+**Summary:** `kubectl exec` is not often used, but is an important skill to be familiar with when it comes to Pod
+debugging.
+
+---
+
 ### `kubectl proxy`
 `kubectl proxy` enables access to both the Kubernetes API-Server or to a resource running within the cluster
 securely from `kubectl`. By default it creates a connection to the API-Server that can be accessed at
@@ -563,14 +607,12 @@ $ minikube proxy
 **Summary:** Being able to access the exposed Pods and Services within a cluster without having to consume an
 external IP, or create firewall rules is an incredibly useful tool for troubleshooting cluster services.
 
-
 ---
 
 [Back to Index](#index)
 
 ---
 ---
-
 
 ## Cleaning up
 To remove everything that was created in this tutorial, execute the following commands:

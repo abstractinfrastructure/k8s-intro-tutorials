@@ -69,18 +69,18 @@ essential in the general usage of Kubernetes.
 
 # Pods
 A pod is the atomic unit of Kubernetes. It is the smallest _“unit of work”_ or _“management resource”_ within the
-system and is the foundational building block of Kubernetes Workloads.
+system and is the foundational building block of all Kubernetes Workloads.
 
 ---
 
 ### Exercise: Creating Pods
-**Objective:** Create two different pod examples. Then view them and their attributes through both the cli and API
-Server proxy.
+**Objective:** Examine both single and multi-container Pods; including: viewing their attributes through the cli and
+their exposed services through the API Server proxy.
 
 ---
 
-1) Create a simple pod called `pod-example` using the `nginx:stable-alpine` image and expose port `80`. The manifest
-`manifests/pod-example.yaml` or the yaml below may be used.
+1) Create a simple pod called `pod-example` using the `nginx:stable-alpine` image and expose port `80`. Use the
+manifest `manifests/pod-example.yaml` or the yaml below.
 
 **Command**
 ```
@@ -117,10 +117,10 @@ $ kubectl proxy
 http://127.0.0.1:8001/api/v1/namespaces/dev/pods/pod-example/proxy/
 ```
 
-The default **"Welcome to nginx!"** page should now be visible.
+The default **"Welcome to nginx!"** page should be visible.
 
 5) Using the same steps as above, create a new pod called `multi-container-example` using the manifest
-in `manifests/pod-multi-container-example.yaml` or create a new one yourself with the below yaml.
+`manifests/pod-multi-container-example.yaml` or create a new one yourself with the below yaml.
 
 **Command**
 ```
@@ -155,6 +155,7 @@ spec:
   - name: html
     emptyDir: {}
 ```
+`spec.containers` is an array allowing you to use multiple containers within a Pod.
 
 6) Use the proxy to verify the web server running in the deployed pod.
 
@@ -196,7 +197,7 @@ set-based selectors.
 
 ---
 
-1) Label the pod `pod-example` with `app=nginx` and `environment=dev` via `kubectl`
+1) Label the pod `pod-example` with `app=nginx` and `environment=dev` via `kubectl`.
 
 ```
 $ kubectl label pod pod-example app=nginx tier=frontend environment=dev
@@ -247,7 +248,7 @@ spec:
     emptyDir: {}
 ```
 
-4) View the added labels with `kubectl` by passing the `--show-labels` flag
+4) View the added labels with `kubectl` by passing the `--show-labels` flag once again.
 ```
 $ kubectl get pods --show-labels
 ```
@@ -290,12 +291,12 @@ resource (unlike Pods) that is given a static cluster-unique IP and provide simp
 ---
 
 ### Exercise: The clusterIP Service
-**Objective:** Create a `ClusterIP` service and view the different it is accessible within the cluster.
+**Objective:** Create a `ClusterIP` service and view the different ways it is accessible within the cluster.
 
 ---
 
 1) Create `ClusterIP` service `clusterip` that targets pods labeled with the `app=nginx` forwarding port `80` using
-either the `yaml` below, or the manifest `manifests/service-clusterip.yaml`.
+either the yaml below, or the manifest `manifests/service-clusterip.yaml`.
 
 **Command**
 ```
@@ -317,7 +318,7 @@ spec:
     targetPort: 80
 ```
 
-2) Describe the newly created service Endpoints. Note the `IP` and the `Endpoints`.
+2) Describe the newly created service Endpoints. Note the `IP` and the `Endpoints` fields.
 ```
 $ kubectl describe service clusterip
 ```
@@ -334,7 +335,7 @@ http://127.0.0.1:8001/api/v1/namespaces/dev/services/clusterip/proxy/
 ```
 
 4) Lastly, verify that the generated DNS record has been created for the service by using nslookup within the
-`example-pod` pod.
+`example-pod` pod that was provisioned in the [Creating Pods](#exercise-creating-pods) exercise.
 ```
 $ kubectl exec pod-example -- nslookup clusterip.dev.svc.cluster.local
 ```
@@ -343,7 +344,7 @@ It should return a valid response with the IP matching what was noted earlier wh
 ---
 
 **Summary:** The `ClusterIP` service is the most commonly used service within Kubernetes. Every `ClusterIP` service
-is given a cluster unique IP and DNS name that maps to one or more pod `Endpoints`. It function as the main method in
+is given a cluster unique IP and DNS name that maps to one or more pod `Endpoints`. It functions as the main method in
 which exposed Pod services are consumed **within** a Kubernetes Cluster.
 
 ---
@@ -355,7 +356,7 @@ which exposed Pod services are consumed **within** a Kubernetes Cluster.
 ---
 
 1) Create a `NodePort` service called `nodeport` that targets pods with the labels `app=nginx` and `environment=dev`
-forwarding port `80` in cluster, and port `32410` on the node itself. Use either the `yaml` below, or the manifest
+forwarding port `80` in cluster, and port `32410` on the node itself. Use either the yaml below, or the manifest
 `manifests/service-nodeport.yaml`.
 
 **Command**
@@ -413,7 +414,7 @@ make a service available outside the Cluster.
 
 **Before you Begin**
 To use Service Type `LoadBalancer` it requires integration with an external IP provider. In most cases, this is a
-cloud provider that will already be integrated with your cluster.
+cloud provider which will likely already be integrated with your cluster.
 
 For bare-metal and on prem deployments, this must be handled yourself. There are several available tools and products
 that can do this, but for this example the Google [metalLB](https://github.com/google/metallb) provider will be used.
@@ -426,7 +427,7 @@ $ kubectl create -f manifests/metalLB.yaml
 ```
 
 1) Create a `LoadBalancer` service called `loadbalancer` that targets pods with the labels `app=nginx` and
-`environment=prod` forwarding as port `80`. Use either the `yaml` below, or the manifest
+`environment=prod` forwarding as port `80`. Use either the yaml below, or the manifest
 `manifests/service--loadbalancer.yaml`.
 
 **Command**
@@ -459,10 +460,11 @@ spec:
 $ kubectl describe service loadbalancer
 ```
 
-3) Open a browser and visit the IP noted in the `Loadbalancer Ingress` field. It should direct map to the exposed
+3) Open a browser and visit the IP noted in the `Loadbalancer Ingress` field. It should directly map to the exposed
 service.
 
-4) Use the `minikube service` command to open the `NodePort` portion of the `loadbalancer` in a new browser window.
+4) Use the `minikube service` command to open the `NodePort` portion of the `loadbalancer` service in a new browser
+window.
 ```
 $ minikube service -n dev loadbalancer
 ```
@@ -477,14 +479,14 @@ It should return a valid response with the IP matching what was noted earlier wh
 ---
 
 **Summary:** `LoadBalancer` services are the second most frequently used service within Kubernetes as they are the
-primary method of directing externa traffic into the Kubernetes cluster. They work with an external provider to map
+main method of directing external traffic into the Kubernetes cluster. They work with an external provider to map
 ingress traffic destined to the `LoadBalancer Ingress` IP to the cluster nodes on the exposed `NodePort`. These in
 turn direct traffic to the desired Pods.
 
 ---
 
 ### Exercise: Using the ExternalName Service
-**Objective:** Create an `ExternalName` service with `kubectl` and discover how it is used within a Kubernetes Cluster.
+**Objective:** Gain an understanding of the `ExternalName` service and how it is used within a Kubernetes Cluster.
 
 ---
 
@@ -522,7 +524,7 @@ internal service discovery methods to reference external entities.
 To remove everything that was created in this tutorial, execute the following commands:
 ```
 $ kubectl delete namespace dev
-$ kubectl delete namespace metallb-system
+$ kubectl delete -f manifests/metalLB.yaml
 $ kubectl config delete-context minidev
 $ kubectl config use-context minikube
 ```
