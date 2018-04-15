@@ -11,14 +11,14 @@ In **ALL CASES** a Pod Template is included, and acts as the base tier of manage
 * [ReplicaSets](#replicasets)
   * [Exercise: Understanding ReplicaSets](#exercise-understanding-replicasets)
 * [Deployments](#deployments)
-  * [Exercise: Using Deployments](#using-deployments)
-  * [Exercise: Rolling Back a Deployment](#rolling-back-a-deployment)
+  * [Exercise: Using Deployments](#exercise-using-deployments)
+  * [Exercise: Rolling Back a Deployment](#exercise-rolling-back-a-deployment)
 * [DaemonSets](#daemonsets)
   * [Exercise: Managing DaemonSets](#exercise-managing-daemonsets)
   * [Optional: Working with DaemonSet Revisions](#optional-working-with-daemonset-revisions)
 * [StatefulSets](#statefulsets)
-  * [Exercise: Creating StatefulSets](#exercise-using-statefulsets)
-  * [Exercise: Understanding StatefulSet Network Identity](#exercise-understaning-statefulset-network-identity)
+  * [Exercise: Managing StatefulSets](#exercise-managing-statefulsets)
+  * [Exercise: Understanding StatefulSet Network Identity](#exercise-understanding-statefulset-network-identity)
 * [Jobs and Cronjobs](#jobs-and-cronjobs)
   * [Exercise: Creating a Job](#exercise-creating-a-job)
   * [Exercise: Scheduling a CronJob](#exercise-scheduling-a-cronjob)
@@ -377,13 +377,13 @@ spec:
       labels:
         app: nginx
     spec:
+      nodeSelector:
+        nodeType: edge
       containers:
       - name: nginx
         image: nginx:stable-alpine
         ports:
         - containerPort: 80
-      nodeSelector:
-        nodeType: edge
 ```
 
 **Command**
@@ -518,7 +518,7 @@ They ensure persistence by making use of three things:
 * A volume template to ensure stable per-instance storage.
 ---
 
-### Exercise: Creating StatefulSets
+### Exercise: Managing StatefulSets
 **Objective:** Create, update, and delete a `StatefulSet` to gain an understanding of how the StatefulSet lifecycle
 differs from other workloads with regards to updating, deleting and the provisioning of storage.
 

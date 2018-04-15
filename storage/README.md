@@ -10,7 +10,7 @@ For this task we have Volumes, Persistent Volumes, Persistent Volume Claims, and
 * [Before you Begin](#before-you-begin)
 * [Volumes](#volumes)
   * [Exercise: Using Volumes with Pods](#exercise-using-volumes-with-pods)
-* [Persistent Volumes and Claims](#persistent-volumes-and-claim)
+* [Persistent Volumes and Claims](#persistent-volumes-and-claims)
   * [Exercise: Understanding Persistent Volumes and Claims](#exercise-understanding-persistent-volumes-and-claims)
   * [Exercise: Using PersistentVolumeClaims](#exercise-using-persistentvolumeclaims)
 * [Storage Classes](#storage-classes)

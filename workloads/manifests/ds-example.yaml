@@ -12,10 +12,10 @@ spec:
       labels:
         app: nginx
     spec:
+      nodeSelector:
+        nodeType: edge
       containers:
       - name: nginx
         image: nginx:stable-alpine
         ports:
         - containerPort: 80
-      nodeSelector:
-        nodeType: edge

@@ -11,15 +11,15 @@ spec:
       mountPath: /usr/share/nginx/html
   - name: content
     image: alpine:latest
-    volumeMounts:
-    - name: html
-      mountPath: /html
     command: ["/bin/sh", "-c"]
     args:
       - while true; do
           date >> /html/index.html;
           sleep 5;
         done
+    volumeMounts:
+    - name: html
+      mountPath: /html
   volumes:
   - name: html
     emptyDir: {}
