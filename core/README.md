@@ -82,11 +82,6 @@ their exposed services through the API Server proxy.
 1) Create a simple pod called `pod-example` using the `nginx:stable-alpine` image and expose port `80`. Use the
 manifest `manifests/pod-example.yaml` or the yaml below.
 
-**Command**
-```
-$ kubectl create -f manifests/pod-example.yaml
-```
-
 **manifests/pod-example.yaml**
 ```
 apiVersion: v1
@@ -99,6 +94,11 @@ spec:
     image: nginx:stable-alpine
     ports:
     - containerPort: 80
+```
+
+**Command**
+```
+$ kubectl create -f manifests/pod-example.yaml
 ```
 
 3) Use `kubectl` to describe the pod and note the available information.
@@ -121,11 +121,6 @@ The default **"Welcome to nginx!"** page should be visible.
 
 5) Using the same steps as above, create a new pod called `multi-container-example` using the manifest
 `manifests/pod-multi-container-example.yaml` or create a new one yourself with the below yaml.
-
-**Command**
-```
-$ kubectl create -f /manifests/pod-multi-container-example.yaml
-```
 
 **manifests/pod-multi-container-example.yaml**
 ```
@@ -155,6 +150,12 @@ spec:
   - name: html
     emptyDir: {}
 ```
+
+**Command**
+```
+$ kubectl create -f /manifests/pod-multi-container-example.yaml
+```
+
 `spec.containers` is an array allowing you to use multiple containers within a Pod.
 
 6) Use the proxy to verify the web server running in the deployed pod.
@@ -211,11 +212,6 @@ $ kubectl get pods --show-labels
 3) Update the multi-container example manifest created previously with the labels `app=nginx` and `environment=prod`
 then apply it via `kubectl`.
 
-**Command**
-```
-$ kubectl apply -f manifests/pod-multi-container-example.yaml
-```
-
 **manifests/pod-multi-container-example.yaml**
 ```
 apiVersion: v1
@@ -246,6 +242,11 @@ spec:
   volumes:
   - name: html
     emptyDir: {}
+```
+
+**Command**
+```
+$ kubectl apply -f manifests/pod-multi-container-example.yaml
 ```
 
 4) View the added labels with `kubectl` by passing the `--show-labels` flag once again.
@@ -298,11 +299,6 @@ resource (unlike Pods) that is given a static cluster-unique IP and provide simp
 1) Create `ClusterIP` service `clusterip` that targets pods labeled with the `app=nginx` forwarding port `80` using
 either the yaml below, or the manifest `manifests/service-clusterip.yaml`.
 
-**Command**
-```
-$ kubectl create -f manifests/service-clusterip.yaml
-```
-
 **manifests/service-clusterip.yaml**
 ```
 apiVersion: v1
@@ -316,6 +312,11 @@ spec:
   - protocol: TCP
     port: 80
     targetPort: 80
+```
+
+**Command**
+```
+$ kubectl create -f manifests/service-clusterip.yaml
 ```
 
 2) Describe the newly created service Endpoints. Note the `IP` and the `Endpoints` fields.
@@ -359,11 +360,6 @@ which exposed Pod services are consumed **within** a Kubernetes Cluster.
 forwarding port `80` in cluster, and port `32410` on the node itself. Use either the yaml below, or the manifest
 `manifests/service-nodeport.yaml`.
 
-**Command**
-```
-$ kubectl create -f manifests/service-nodeport.yaml
-```
-
 **manifests/service-nodeport.yaml**
 ```
 apiVersion: v1
@@ -380,6 +376,11 @@ spec:
     protocol: TCP
     port: 80
     targetPort: 80
+```
+
+**Command**
+```
+$ kubectl create -f manifests/service-nodeport.yaml
 ```
 
 2) Describe the newly created service Endpoint. Note the service still has an internal cluster `IP`, and now
@@ -430,11 +431,6 @@ $ kubectl create -f manifests/metalLB.yaml
 `environment=prod` forwarding as port `80`. Use either the yaml below, or the manifest
 `manifests/service--loadbalancer.yaml`.
 
-**Command**
-```
-$ kubectl create -f manifests/service-loadbalancer.yaml
-```
-
 **manifests/service-loadbalancer.yaml**
 ```
 apiVersion: v1
@@ -452,7 +448,10 @@ spec:
     targetPort: 80
 ```
 
----
+**Command**
+```
+$ kubectl create -f manifests/service-loadbalancer.yaml
+```
 
 2) Describe the service `loadbalancer`, and note the service retains the aspects of both the `ClusterIP` and
 `NodePort` service types in addition to having a new attribute `LoadBalancer Ingress`.

@@ -5,7 +5,7 @@ Workloads within Kubernetes are higher level objects that manage Pods or other h
 In **ALL CASES** a Pod Template is included, and acts as the base tier of management.
 
 **Note:** Unlike some of the other tutorials, the workload exercises should be cleaned up before moving onto the next
- workload type. The clean-up commands will included after **Summary** section of an exercise.
+ workload type. The clean-up commands will included after **Summary** section of the exercise.
 
 # Index
 * [ReplicaSets](#replicasets)
@@ -18,7 +18,7 @@ In **ALL CASES** a Pod Template is included, and acts as the base tier of manage
   * [Optional: Working with DaemonSet Revisions](#optional-working-with-daemonset-revisions)
 * [StatefulSets](#statefulsets)
   * [Exercise: Creating StatefulSets](#exercise-using-statefulsets)
-  * [Exercise: Understanding StatefulSet Network Identitify](#exercise-understaning-statefulset-netowrk-idenitity)
+  * [Exercise: Understanding StatefulSet Network Identity](#exercise-understaning-statefulset-network-identity)
 * [Jobs and Cronjobs](#jobs-and-cronjobs)
   * [Exercise: Creating a Job](#exercise-creating-a-job)
   * [Exercise: Scheduling a CronJob](#exercise-scheduling-a-cronjob)
@@ -36,19 +36,14 @@ Their job is simple, **always** ensure the desired number of `replicas` that mat
 ---
 
 ### Exercise: Understanding ReplicaSets
-**Objective:** Create and scale a ReplicaSet. Describe and understand how the Pods are generated from the Pod template
-and how they are targeted with selectors.
+**Objective:** Create and scale a ReplicaSet. Explore and gain an understanding of how the Pods are generated from
+the Pod template, and how they are targeted with selectors.
 
 ---
 
 1) Begin by creating a ReplicaSet called `rs-example` with `3` `replicas`, using the `nginx:stable-alpine` image and
 configure the labels and selectors to target `app=nginx` and `env=prod`. The yaml block below or the manifest
 `manifests/rs-example.yaml` may be used.
-
-**Command**
-```
-kubectl create -f manifests/rs-example.yaml
-```
 
 **manifests/rs-example.yaml**
 ```yaml
@@ -75,6 +70,11 @@ spec:
         - containerPort: 80
 ```
 
+**Command**
+```
+kubectl create -f manifests/rs-example.yaml
+```
+
 2) Watch as the newly created ReplicaSet provisions the Pods based off the Pod Template.
 ```
 $ kubectl get pods --watch --show-labels
@@ -86,7 +86,7 @@ string. These Pods are labeled with the labels as specified in the manifest.
 ```
 $ kubectl scale replicaset rs-example --replicas=5
 ```
-**Tip:** `rs` can be substituted for `replicaset` when using `kubectl`.
+**Tip:** `replicaset` can be substituted with `rs` when using `kubectl`.
 
 4) Describe `rs-example` and take note of the `Replicas` and `Pod Status` field in addition to the `Events`.
 ```
@@ -156,14 +156,9 @@ and Pod.
 
 ---
 
-1) Create a deployment `deploy-example`. Configure it using the example yaml block below or use the  manifest
+1) Create a deployment `deploy-example`. Configure it using the example yaml block below or use the manifest
 `manifests/deploy-example.yaml`. Additionally pass the `--record` flag to `kubectl` when you create the Deployment.
 The `--record` flag saves the command as an annotation, and it can be thought of similar to a git commit message.
-
-**Command**
-```
-$ kubectl create -f manifests/deploy-example.yaml --record
-```
 
 **manifests/deployment-example.yaml**
 ```yaml
@@ -192,6 +187,11 @@ spec:
         image: nginx:stable-alpine
         ports:
         - containerPort: 80
+```
+
+**Command**
+```
+$ kubectl create -f manifests/deploy-example.yaml --record
 ```
 
 2) Check the status of the deployment.
@@ -361,11 +361,6 @@ how they are scheduled and how an update occurs.
 1) Create DaemonSet `ds-example`. Use the example yaml block below as a base, or use the manifest
 `manifests/ds-example.yaml` directly.
 
-**Command**
-```
-$ kubectl create -f manifests/ds-example.yaml
-```
-
 **manifests/ds-example.yaml**
 ```yaml
 apiVersion: apps/v1
@@ -389,7 +384,11 @@ spec:
         - containerPort: 80
       nodeSelector:
         nodeType: edge
+```
 
+**Command**
+```
+$ kubectl create -f manifests/ds-example.yaml
 ```
 
 2) View the current DaemonSets.
@@ -527,11 +526,6 @@ differs from other workloads with regards to updating, deleting and the provisio
 
 1) Create StatefulSet `sts-example` using the yaml block below or the manifest `manifests/sts-example.yaml`.
 
-**Command**
-```
-$ kubectl create -f manifests/sts-example.yaml
-```
-
 **manifests/sts-example.yaml**
 ```yaml
 apiVersion: apps/v1
@@ -545,6 +539,8 @@ spec:
     matchLabels:
       app: stateful
   serviceName: app
+  updateStrategy:
+    type: OnDelete
   template:
     metadata:
       labels:
@@ -569,6 +565,11 @@ spec:
           storage: 1Gi
 ```
 
+**Command**
+```
+$ kubectl create -f manifests/sts-example.yaml
+```
+
 2) Immediately watch the pods being created.
 ```
 $ kubectl get pods --show-labels --watch
@@ -579,9 +580,9 @@ the `controller-revision-hash` label. This serves the same purpose as the `contr
 DaemonSet or the `pod-template-hash` in a Deployment. It provides a means of tracking the revision of the Pod
 Template and enables rollback functionality.
 
-3) More information can be gleaned about the state of the StatefulSet by describing it.
+3) More information on the StatefulSet can be gleaned about the state of the StatefulSet by describing it.
 ```
-$ kbuectl describe statefulset sts-example
+$ kubectl describe statefulset sts-example
 ```
 Within the events, notice that it is creating claims for volumes before each Pod is created.
 
@@ -601,29 +602,56 @@ $ kubectl edit statefulset sts-example --record
 
 6) Return to watching the Pods.
 ```
+$ kubectl get pods --show-labels
+```
+None of the Pods are being updated to the new version of the Pod. Then immediately get the Pods
+
+7) Delete the `sts-example-2` Pod.
+```
+$ kubectl delete pod sts-example-2
+```
+
+8) Immediately get the Pods.
+```
+$ kubectl get pods --show-labels --watch
+```
+The new `sts-example-2` Pod should be created with the new additional labels. The `OnDelete` Update Strategy will
+not spawn a new iteration of the Pod until the previous one was **deleted**. This allows for manual gating the
+update process for the StatefulSet.
+
+9) Update the StatefulSet and change the Update Strategy Type to `RollingUpdate`.
+```
+$ kubectl apply -f manifests/sts-example.yaml --record
+  < or >
+$ kubectl edit statefulset sts-example --record
+```
+
+10) Immediately watch the Pods once again.
+```
 $ kubectl get pods --show-labels --watch
 ```
 Note that the Pods are sequentially updated in descending order, or largest to smallest based on the
-Pod's ordinal index. This means that `sts-example-2` is updated, then `sts-example-1` then finally `sts-example-0`.
+Pod's ordinal index. This means that if `sts-example-2` was not updated already, it would be updated first, then
+`sts-example-1` and finally `sts-example-0`.
 
-6) Delete the StatefulSet `sts-example`
+11) Delete the StatefulSet `sts-example`
 ```
 $ kubectl delete statefulset sts-example
 ```
 
-7) View the Persistent Volume Claims.
+12) View the Persistent Volume Claims.
 ```
 $ kubectl get pvc
 ```
 Created PVCs are **NOT** garbage collected automatically when a StatefulSet is deleted. They must be reclaimed
 independently of the StatefulSet itself.
 
-8) Recreate the StatefulSet using the same manifest.
+13) Recreate the StatefulSet using the same manifest, ensure that .
 ```
 $ kubectl create -f manifests/sts-example.yaml --record
 ```
 
-9) View the Persistent Volume Claims again.
+14) View the Persistent Volume Claims again.
 ```
 $ kubectl get pvc
 ```
@@ -638,20 +666,15 @@ does however make this task easier.
 
 ---
 
-### Exercise: Understaing StatefulSet Network Identitify
+### Exercise: Understanding StatefulSet Network Identity
 
 **Objective:** Create a _"headless service"_ or a service without a `ClusterIP` (`ClusterIP=None`) for use with the
 StatefulSet `sts-example`, then explore how this enables consistent service discovery.
 
 ---
 
-1) Create the headless service `app` using the `app=stateful` selector from the `yaml` below or the manifest
+1) Create the headless service `app` using the `app=stateful` selector from the yaml below or the manifest
 `manifests/service-sts-example.yaml`.
-
-**Command**
-```
-$ kubectl create -f manifests/service-sts-example.yaml
-```
 
 **manifests/service-sts-example.yaml**
 ```yaml
@@ -669,6 +692,11 @@ spec:
     targetPort: 80
 ```
 
+**Command**
+```
+$ kubectl create -f manifests/service-sts-example.yaml
+```
+
 2) Describe the newly created service
 ```
 $ kubectl describe svc app
@@ -681,7 +709,7 @@ in this behavior.
 $ kubectl exec sts-example-0 -- nslookup app.default.svc.cluster.local
 ```
 An A record will have been returned for each instance of the StatefulSet. Querying the service directly will do
-simple DNS round-robin based load-balancing.
+simple DNS round-robin load-balancing.
 
 4) Finally, query one of instances directly.
 ```
@@ -709,7 +737,6 @@ $ kubectl delete pvc www-sts-example-0 www-sts-example-1 www-sts-example-2
 
 ---
 
-
 [Back to Index](#index)
 
 ---
@@ -729,12 +756,7 @@ CronJobs are an extension of the Job Controller, and enable Jobs to be run on a 
 
 ---
 
-1) Create job `job-example` using `yaml` below, or the manifest located at `manifests/job-example.yaml`
-
-**Command**
-```
-$ kubectl create -f manifests/job-example.yaml
-```
+1) Create job `job-example` using yaml below, or the manifest located at `manifests/job-example.yaml`
 
 **manifests/job-example.yaml**
 ```yaml
@@ -754,6 +776,11 @@ spec:
         command: ["/bin/sh", "-c"]
         args: ["echo hello from $HOSTNAME!"]
       restartPolicy: Never
+```
+
+**Command**
+```
+$ kubectl create -f manifests/job-example.yaml
 ```
 
 2) Watch the Pods as they are being created.
@@ -794,14 +821,9 @@ a job in the event of a problem.
 
 ---
 
-1) Create CronJob `cronjob-example` based off the `yaml` below, or use the manifest
-`manifests/cronjob-example.yaml` It is configured to run the job from the earlier example every minute, using the
-cron schedule `"*/1 * * * *"`. This schedule is **UTC ONLY**.
-
-**Command**
-```
-$ kubectl create -f manifests/cronjob-example.yaml
-```
+1) Create CronJob `cronjob-example` based off the yaml below, or use the manifest `manifests/cronjob-example.yaml`
+It is configured to run the job from the earlier example every minute, using the cron schedule `"*/1 * * * *"`.
+This schedule is **UTC ONLY**.
 
 **manifests/cronjob-example.yaml**
 ```yaml
@@ -825,6 +847,11 @@ spec:
             command: ["/bin/sh", "-c"]
             args: ["echo hello from $HOSTNAME!"]
           restartPolicy: Never
+```
+
+**Command**
+```
+$ kubectl create -f manifests/cronjob-example.yaml
 ```
 
 2) Give it some time to run, and then list the jobs.

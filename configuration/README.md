@@ -41,11 +41,6 @@ ConfigMaps can be created from a manifest, literals, a directory, or from the fi
 #### From Manifest
 Create ConfigMap `manifest-example` from the manifest `manifests/cm-manifest.yaml` or use the yaml below.
 
-**Command**
-```
-$ kubectl create -f manifests/cm-manifest.yaml
-```
-
 **manifests/cm-manifest.yaml**
 ```
 apiVersion: v1
@@ -55,6 +50,11 @@ metadata:
 data:
   city: Ann Arbor
   state: Michigan
+```
+
+**Command**
+```
+$ kubectl create -f manifests/cm-manifest.yaml
 ```
 
 View the created ConfigMap.
@@ -118,11 +118,6 @@ have not, complete it first before continuing.
 
 1) Create Job `cm-env-example` using the manifest `manifests/cm-env-example.yaml` or the yaml below.
 
-**Command**
-```
-$ kubectl create -f manifests/cm-env-example.yaml
-```
-
 **manifests/cm-env-example.yaml**
 ```
 apiVersion: batch/v1
@@ -145,6 +140,12 @@ spec:
               key: city
       restartPolicy: Never
 ```
+
+**Command**
+```
+$ kubectl create -f manifests/cm-env-example.yaml
+```
+
 Note how the Environment Variable is injected using `valueFrom` and `configMapKeyRef`. This queries a specific key
 from the ConfigMap and injects it as an Environment Variable.
 
@@ -162,11 +163,6 @@ It should echo the value from the `manifest-example` ConfigMap `city` key-value 
 This same technique can be used to inject the value for use in a Command.
 
 4) Create another Job `cm-cmd-example` from the manifest `manifests/cm-cmd-example.yaml` or use the yaml below.
-
-**Command**
-```
-$ kubectl create -f manifests/cm-cmd-example.yaml
-```
 
 **manifests/cm-cmd-example.yaml**
 ```
@@ -189,6 +185,11 @@ spec:
               name: manifest-example
               key: city
       restartPolicy: Never
+```
+
+**Command**
+```
+$ kubectl create -f manifests/cm-cmd-example.yaml
 ```
 
 5) List the Pods passing `--show-all` to view the completed job.
@@ -227,11 +228,6 @@ have not, complete it first before continuing.
 
 1) Create the Pod `cm-vol-example` using the manifest `manifests/cm-vol-example.yaml` or use the yaml below.
 
-**Command**
-```
-$ kubectl create -f manifests/cm-vol-example.yaml
-```
-
 **manifests/cm-vol-example.yaml**
 ```
 apiVersion: v1
@@ -264,6 +260,12 @@ spec:
       - key: city
         path: thisismycity
 ```
+
+**Command**
+```
+$ kubectl create -f manifests/cm-vol-example.yaml
+```
+
 Note the volumes and how they are being referenced. The volume `city`, has an array of `items` that contains a sub-set
 of the key-value pairs stored in the `manifest-example` ConfigMap. When working with the individual items, it is
 possible to override the name or path to the generated file, by supplying an argument for the `path` parameter.
@@ -338,11 +340,6 @@ ConfigMap counterparts.
 #### From Manifest
 Create Secret `manifest-example` from the manifest `manifests/secret-manifest.yaml` or use the yaml below.
 
-**Command**
-```
-$ kubectl create -f manifests/secret-manifest.yaml
-```
-
 **manifests/secret-manifest.yaml**
 ```
 apiVersion: v1
@@ -354,6 +351,12 @@ data:
   username: ZXhhbXBsZQ==
   password: bXlwYXNzd29yZA==
 ```
+
+**Command**
+```
+$ kubectl create -f manifests/secret-manifest.yaml
+```
+
 Note the Secret has the additional attribute `type` when compared to a ConfigMap. The `Opaque` value simply means the
 data is unstructured. Additionally, the content referenced in `data` itself is base64 encoded. Decoded, they are
 `username=example` and `password=mypassword`.
@@ -420,11 +423,6 @@ have not, complete it first before continuing.
 
 1) Create Job `secret-env-example` using the manifest `manifests/secret-env-example.yaml` or the yaml below.
 
-**Command**
-```
-$ kubectl create -f manifests/secret-env-example.yaml
-```
-
 **manifests/secret-env-example.yaml**
 ```
 apiVersion: batch/v1
@@ -447,6 +445,12 @@ spec:
               key: username
       restartPolicy: Never
 ```
+
+**Command**
+```
+$ kubectl create -f manifests/secret-env-example.yaml
+```
+
 Note how the Environment Variable is injected using `valueFrom` and `secretKeyRef`. This queries a specific key
 from the Secret and injects it as an Environment Variable.
 
@@ -464,11 +468,6 @@ It should echo the value from the `manifest-example` Secret `username` key-value
 This same technique can be used to inject the value for use in a Command.
 
 4) Create another Job `secret-cmd-example` from the manifest `manifests/secret-cmd-example.yaml` or use the yaml below.
-
-**Command**
-```
-$ kubectl create -f manifests/cm-cmd-example.yaml
-```
 
 **manifests/secret-cmd-example.yaml**
 ```
@@ -491,6 +490,11 @@ spec:
               name: manifest-example
               key: username
       restartPolicy: Never
+```
+
+**Command**
+```
+$ kubectl create -f manifests/cm-cmd-example.yaml
 ```
 
 5) List the Pods passing `--show-all` to view the completed job.
@@ -529,11 +533,6 @@ have not, complete it first before continuing.
 
 1) Create the Pod `secret-vol-example` using the manifest `manifests/secret-vol-example.yaml` or use the yaml below.
 
-**Command**
-```
-$ kubectl create -f manifests/secret-vol-example.yaml
-```
-
 **manifests/secret-vol-example.yaml**
 ```
 apiVersion: v1
@@ -566,6 +565,12 @@ spec:
       - key: password
         path: supersecretpass
 ```
+
+**Command**
+```
+$ kubectl create -f manifests/secret-vol-example.yaml
+```
+
 Note the volumes and how they are being referenced. The volume `password`, has an array of `items` that contains a sub-set
 of the key-value pairs stored in the `manifest-example` ConfigMap. When working with the individual items, it is
 possible to override the name or path to the generated file, by supplying an argument for the `path` parameter.

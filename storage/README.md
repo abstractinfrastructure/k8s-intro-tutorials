@@ -53,10 +53,6 @@ They can survive Pod restarts; however their durability beyond that is dependent
 
 1) Create a Pod with from the manifest `manifests/volume-example.yaml` or the yaml below.
 
-```
-$ kubectl create -f manifests/volume-example.yaml
-```
-
 **manifests/volume-example.yaml**
 ```
 apiVersion: v1
@@ -86,6 +82,12 @@ spec:
   - name: html
     emptyDir: {}
 ```
+
+**Command**
+```
+$ kubectl create -f manifests/volume-example.yaml
+```
+
 Note the relationship between `volumes` in the Pod spec, and the `volumeMounts` directive in each container.
 
 2) Exec into `content` container within the `volume-example` Pod, and `cat` the `html/index.html` file.
@@ -156,11 +158,6 @@ the multiple ways they may be selected.
 that its labeled with `type=hostpath` and its Storage Class Name is set to `mypvsc`, and uses `Delete` for the Reclaim
 Policy.
 
-**Command**
-```
-$ kubectl create -f manifests/pv-sc-example.yaml
-```
-
 **manifests/pv-example.yaml**
 ```
 kind: PersistentVolume
@@ -179,6 +176,11 @@ spec:
   hostPath:
     type: DirectoryOrCreate
     path: "/data/mypvsc"
+```
+
+**Command**
+```
+$ kubectl create -f manifests/pv-sc-example.yaml
 ```
 
 2) Once created list the available Persistent Volumes.
@@ -223,11 +225,6 @@ The pvc `pvc-selector-example` should be in a `Pending` state with the Error Eve
 
 5) Now create the PV `pv-selector-example` from the manifest `manifests/pv-selector-example.yaml` or the yaml below.
 
-**Command**
-```
-$ kubectl create -f manifests/pv-selector-example.yaml
-```
-
 **manifests/pv-selector-example.yaml**
 ```
 kind: PersistentVolume
@@ -246,6 +243,11 @@ spec:
     path: "/data/mypvselector"
 ```
 
+**Command**
+```
+$ kubectl create -f manifests/pv-selector-example.yaml
+```
+
 6) Give it a few moments and then look at the Persistent Volumes once again.
 ```
 $ kubectl get pv
@@ -254,11 +256,6 @@ The PV `pv-selector-example` should now be in a `Bound` state, meaning that a PV
 Once bound, **NO** other PVCs may make a claim against the PV.
 
 7) Create the pvc `pvc-sc-example` from the manifest `manifests/pvc-sc-example.yaml` or use the yaml below.
-
-**Command**
-```
-$ kubectl create -f manifests/pvc-sc-example.yaml
-```
 
 **manifests/pvc-sc-example.yaml**
 ```
@@ -274,6 +271,12 @@ spec:
     requests:
       storage: 1Gi
 ```
+
+**Command**
+```
+$ kubectl create -f manifests/pvc-sc-example.yaml
+```
+
 Note that this PVC has a `storageClassName` reference and no selector.
 
 8) Give it a few seconds and then view the current PVCs.
@@ -325,11 +328,6 @@ be used.
 
 1) Create PV and associated PVC `html` using the manifest `manifests/html-vol.yaml`
 
-**Command**
-```
-$ kubectl create -f manifests/html-vol.yaml
-```
-
 **manifest/html-vol.yaml**
 ```
 kind: PersistentVolume
@@ -362,6 +360,11 @@ spec:
   resources:
     requests:
       storage: 1Gi
+```
+
+**Command**
+```
+$ kubectl create -f manifests/html-vol.yaml
 ```
 
 2) Create Deployment `writer` from the manifest `manifests/writer.yaml` or use the yaml below. It is similar to the
@@ -410,11 +413,6 @@ Note that the `claimName` references the previously created PVC defined in the `
 
 2) Create a Deployment and Service `reader` from the manifest `manifests/reader.yaml` or use the yaml below.
 
-**Command**
-```
-$ kubectl create -f manifests/reader.yaml
-```
-
 **manifests/reader.yaml**
 ```
 apiVersion: apps/v1
@@ -459,6 +457,12 @@ spec:
     port: 80
     targetPort: 80
 ```
+
+**Command**
+```
+$ kubectl create -f manifests/reader.yaml
+```
+
 
 3) With the `reader` Deployment and Service created, use `kubectl proxy` to view the service.
 ```
@@ -529,11 +533,6 @@ a hostpath from within the VM as a volume.
 
 3) Create PVC `pvc-standard` from the manifest `manifests/pvc-standard.yaml` or use the yaml below.
 
-**Command**
-```
-$ kubectl create -f manifests/pvc-standard.yaml
-```
-
 **manifests/pvc-standard.yaml**
 ```
 kind: PersistentVolumeClaim
@@ -547,6 +546,11 @@ spec:
   resources:
     requests:
       storage: 1Gi
+```
+
+**Command**
+```
+$ kubectl create -f manifests/pvc-standard.yaml
 ```
 
 4) Describe the PVC `pvc-standard`
@@ -565,11 +569,6 @@ The PV `pvc-<pvc-standard uid>` will be the **exact** size of the associated PVC
 6) Now create the PVC `pvc-selector-example` from the manifest `manifests/pvc-selector-example.yaml` or use the yaml
 below.
 
-**Command**
-```
-$ kubectl create -f manifests/pvc-selector-example.yaml
-```
-
 **manifests/pvc-selector-example.yaml**
 ```
 apiVersion: v1
@@ -584,6 +583,11 @@ spec:
   selector:
     matchLabels:
       type: hostpath
+```
+
+**Command**
+```
+$ kubectl create -f manifests/pvc-selector-example.yaml
 ```
 
 7) List the PVCs.
