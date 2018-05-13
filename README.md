@@ -15,3 +15,7 @@ Each section assumes an instance of minikube is up and running (`minikube start`
 Volumes itself.
 * [configuration](/configuration/README.md) - Tutorials going of  how to use the Kubernetes Configuration objects
 ConfigMaps and Secrets.
+
+---
+
+Tutorials have been validated against minikube v0.26.1 running Kubernetes v1.10.

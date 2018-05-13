@@ -13,9 +13,17 @@ For this task we have Volumes, Persistent Volumes, Persistent Volume Claims, and
 * [Persistent Volumes and Claims](#persistent-volumes-and-claims)
   * [Exercise: Understanding Persistent Volumes and Claims](#exercise-understanding-persistent-volumes-and-claims)
   * [Exercise: Using PersistentVolumeClaims](#exercise-using-persistentvolumeclaims)
-* [Storage Classes](#storage-classes)
-  * [Exercise: Exploring StorageClasses](#exercise-exploring-storageclasses)
-* [Helpful Resources](#helpful-resources)
+- [Storage](#storage)
+- [Index](#index)
+- [Before you Begin](#before-you-begin)
+- [Volumes](#volumes)
+    - [Exercise: Using Volumes with Pods](#exercise--using-volumes-with-pods)
+- [Persistent Volumes and Claims](#persistent-volumes-and-claims)
+    - [Exercise: Understanding Persistent Volumes and Claims](#exercise--understanding-persistent-volumes-and-claims)
+    - [Exercise: Using PersistentVolumeClaims](#exercise--using-persistentvolumeclaims)
+- [Storage Classes](#storage-classes)
+    - [Exercise: Exploring StorageClasses](#exercise--exploring-storageclasses)
+- [Helpful Resources](#helpful-resources)
 
 ---
 
@@ -109,7 +117,7 @@ You should see the same file.
 $ kubectl exec volume-example -c nginx -- /bin/sh -c "echo nginx >> /usr/share/nginx/html/index.html"
 ```
 It should error out and complain about the file being read only. The `nginx` container has no reason to write to the
-file, is mounts the same volume as read-only. Writing to the file is handled by the `content` container.
+file, and mounts the same volume as read-only. Writing to the file is handled by the `content` container.
 
 ---
 
@@ -155,7 +163,7 @@ the multiple ways they may be selected.
 ---
 
 1) Create PV `pv-sc-example` from the manifest `manifests/pv-sc-example.yaml` or use the yaml below. Ensure to note
-that its labeled with `type=hostpath` and its Storage Class Name is set to `mypvsc`, and uses `Delete` for the Reclaim
+that its labeled with `type=hostpath`, its Storage Class Name is set to `mypvsc`, and uses `Delete` for the Reclaim
 Policy.
 
 **manifests/pv-example.yaml**
@@ -183,7 +191,7 @@ spec:
 $ kubectl create -f manifests/pv-sc-example.yaml
 ```
 
-2) Once created list the available Persistent Volumes.
+2) Once created, list the available Persistent Volumes.
 ```
 $ kubectl get pv
 ```
@@ -191,11 +199,6 @@ You should see the single PV `pv-sc-example` flagged with the status `Available`
 that targets it.
 
 3) Create PVC `pvc-selector-example` from the manifest `manifests/pvc-selector-example.yaml`  or the yaml below.
-
-**Command**
-```
-$ kubectl create -f manifests/pvc-selector-example.yaml
-```
 
 **manifests/pvc-selector-example.yaml**
 ```
@@ -213,6 +216,12 @@ spec:
     matchLabels:
       type: hostpath
 ```
+
+**Command**
+```
+$ kubectl create -f manifests/pvc-selector-example.yaml
+```
+
 Note that the selector targets `type=hostpath`.
 
 4) Then describe the newly created PVC
@@ -252,7 +261,7 @@ $ kubectl create -f manifests/pv-selector-example.yaml
 ```
 $ kubectl get pv
 ```
-The PV `pv-selector-example` should now be in a `Bound` state, meaning that a PVC has mapped or been _"bound"_ to it.
+The PV `pv-selector-example` should now be in a `Bound` state, meaning that a PVC has been mapped or _"bound"_ to it.
 Once bound, **NO** other PVCs may make a claim against the PV.
 
 7) Create the pvc `pvc-sc-example` from the manifest `manifests/pvc-sc-example.yaml` or use the yaml below.
@@ -295,8 +304,8 @@ $ kubectl delete pvc pvc-sc-example pvc-selector-example
 ```
 $ kubectl get pv
 ````
-The `pv-sc-example` will not be listed. The `pv-sc-example` was created with a `persistentVolumeReclaimPolicy` of
-`Delete` meaning that as soon as the PVC was deleted, the PV itself was deleted.
+The `pv-sc-example` will not be listed. The `pv-sc-example` PV was created with a `persistentVolumeReclaimPolicy` 
+of `Delete` meaning that as soon as the PVC was deleted, the PV itself was deleted.
 
 PV `pv-selector-example`, was created without specifying a `persistentVolumeReclaimPolicy` and was in turn created
 with the default for PVs: `Retain`. It's state of `Released` means that it's associated PVC has been deleted.
@@ -371,11 +380,6 @@ $ kubectl create -f manifests/html-vol.yaml
 [`volume-example` Pod from the first exercise](#exercise-using-volumes-with-pods), but now uses a
 `persistentVolumeClaim` volume instead of an `emptyDir`.
 
-**Command**
-```
-$ kubectl create -f manifests/writer.yaml
-```
-
 **manifests/writer.yaml**
 ```
 apiVersion: apps/v1
@@ -409,6 +413,12 @@ spec:
         persistentVolumeClaim:
           claimName: html
 ```
+
+**Command**
+```
+$ kubectl create -f manifests/writer.yaml
+```
+
 Note that the `claimName` references the previously created PVC defined in the `html-vol` manifest.
 
 2) Create a Deployment and Service `reader` from the manifest `manifests/reader.yaml` or use the yaml below.
@@ -555,7 +565,7 @@ $ kubectl create -f manifests/pvc-standard.yaml
 
 4) Describe the PVC `pvc-standard`
 ```
-$ kubectl describe pvc-standard
+$ kubectl describe pvc pvc-standard
 ```
 The `Events` lists the actions that occurred when the PVC was created. The external provisioner `standard` provisions
 a volume for the claim `default/pvc-standard` and is assigned the name `pvc-<pvc-standard uid>`.
@@ -607,7 +617,7 @@ $ kubectl delete pvc pvc-standard pvc-selector-example
 ```
 $ kubectl get pv
 ```
-The PV were automatically reclaimed following the `ReclaimPolicy` that was set by the Storage Class.
+The PVs were automatically reclaimed following the `ReclaimPolicy` that was set by the Storage Class.
 
 ---
 

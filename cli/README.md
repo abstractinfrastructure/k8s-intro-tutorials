@@ -411,7 +411,7 @@ simple tasks become 2nd nature as more experience is gained.
 will be on using `kubectl exec` to get a remote shell within a container, and `kubectl proxy` to gain access to the
 services exposed through the API proxy.
 
---
+---
 
 ### `kubectl exec`
 `kubectl exec` executes a command within a Pod and can optionally spawn an interactive terminal within a remote
@@ -463,7 +463,7 @@ $ kubectl exec -i -t mypod -c nginx -- /bin/sh
 $ kubectl create -f manifests/mypod.yaml
 ```
 
-2) Wait for the Pod to become ready.
+2) Wait for the Pod to become ready (`running`).
 ```
 $ kubectl get pods --watch
 ```
@@ -474,7 +474,7 @@ $ kubectl exec mypod -- cat /etc/os-release
 ```
 It should output the contents of the `os-release` file.
 
-4) Now use `kubectl exec` and supply the `-i -t` flags to spawn a shell session.
+4) Now use `kubectl exec` and supply the `-i -t` flags to spawn a shell session within the container.
 ```
 $ kubectl exec -i -t mypod -- /bin/sh
 ```
@@ -577,7 +577,7 @@ $ minikube dashboard
 
 ---
 
-1) Create the Pod `mypod` from the manifest `manifests/mypod.yaml`.
+1) Create the Pod `mypod` from the manifest `manifests/mypod.yaml`. (if not created previously)
 ```
 $ kubectl create -f manifests/mypod.yaml
 ```

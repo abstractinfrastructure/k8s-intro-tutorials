@@ -71,6 +71,8 @@ essential in the general usage of Kubernetes.
 A pod is the atomic unit of Kubernetes. It is the smallest _“unit of work”_ or _“management resource”_ within the
 system and is the foundational building block of all Kubernetes Workloads.
 
+**Note:** These exercises build off the previous Core tutorials. If you have not done so, complete those before continuing.
+
 ---
 
 ### Exercise: Creating Pods
@@ -201,7 +203,7 @@ set-based selectors.
 1) Label the pod `pod-example` with `app=nginx` and `environment=dev` via `kubectl`.
 
 ```
-$ kubectl label pod pod-example app=nginx tier=frontend environment=dev
+$ kubectl label pod pod-example app=nginx environment=dev
 ```
 
 2) View the labels with `kubectl` by passing the `--show-labels` flag
@@ -288,6 +290,8 @@ objects.
 # Services
 Services within Kubernetes are the unified method of accessing the exposed workloads of Pods. They are a durable
 resource (unlike Pods) that is given a static cluster-unique IP and provide simple load-balancing through kube-proxy.
+
+**Note:** These exercises build off the previous Core tutorials. If you have not done so, complete those before continuing.
 
 ---
 
@@ -537,7 +541,7 @@ $ kubectl config use-context minikube
 
 # Helpful Resources
 
-* [Pod Object Spec](#https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.9/#podspec-v1-core)
+* [Pod Object Spec](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.10/#podspec-v1-core)
 * [Labels and Selectors](https://kubernetes.io/docs/concepts/overview/working-with-objects/labels/)
 * [Concepts: Service Networking](https://kubernetes.io/docs/concepts/services-networking/service/)
 

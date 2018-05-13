@@ -268,7 +268,7 @@ $ kubectl create -f manifests/cm-vol-example.yaml
 
 Note the volumes and how they are being referenced. The volume `city`, has an array of `items` that contains a sub-set
 of the key-value pairs stored in the `manifest-example` ConfigMap. When working with the individual items, it is
-possible to override the name or path to the generated file, by supplying an argument for the `path` parameter.
+possible to override the name or path to the generated file by supplying an argument for the `path` parameter.
 
 2) View the contents of the `/myconfig` volume mount.
 ```
@@ -374,7 +374,7 @@ for the values.
 $ kubectl create secret generic literal-example --from-literal=username=example --from-literal=password=mypassword
 ```
 
-View the created ConfigMap.
+View the created Secret.
 ```
 $ kubectl get secret literal-example -o yaml
 ```
@@ -386,9 +386,9 @@ Create Secret `dir-example` by using the `manifests/secret` directory as the sou
 $ kubectl create secret generic dir-example --from-file=manifests/secret/
 ```
 
-View the created ConfigMap.
+View the created Secret.
 ```
-$ kubectl get cm dir-example -o yaml
+$ kubectl get secret dir-example -o yaml
 ```
 
 #### From File
@@ -398,7 +398,7 @@ Create ConfigMap `file-example` by using the `username` and `password` files in 
 $ kubectl create secret generic  file-example --from-file=manifests/secret/username --from-file=manifests/secret/password
 ```
 
-View the created ConfigMap.
+View the created Secret.
 ```
 $ kubectl get secret file-example -o yaml
 ```
@@ -494,7 +494,7 @@ spec:
 
 **Command**
 ```
-$ kubectl create -f manifests/cm-cmd-example.yaml
+$ kubectl create -f manifests/secret-cmd-example.yaml
 ```
 
 5) List the Pods passing `--show-all` to view the completed job.
@@ -518,7 +518,7 @@ Both methods are useful in a wide-variety of scenarios enabling further decoupli
 
 **Clean Up Command:**
 ```
-$ kubectl delete job cm-env-example cm-cmd-example
+$ kubectl delete job secret-env-example secret-cmd-example
 ```
 
 ---
@@ -572,8 +572,8 @@ $ kubectl create -f manifests/secret-vol-example.yaml
 ```
 
 Note the volumes and how they are being referenced. The volume `password`, has an array of `items` that contains a sub-set
-of the key-value pairs stored in the `manifest-example` ConfigMap. When working with the individual items, it is
-possible to override the name or path to the generated file, by supplying an argument for the `path` parameter.
+of the key-value pairs stored in the `manifest-example` Secret. When working with the individual items, it is
+possible to override the name or path to the generated file by supplying an argument for the `path` parameter.
 
 2) View the contents of the `/mysecret` volume mount.
 ```
@@ -585,7 +585,7 @@ It will contain two files, matching the names of the keys stored in Secret `mani
 ```
 $ kubectl exec secret-vol-example -- /bin/sh -c "cat /mysecret/*"
 ```
-It will match the values stored in the configMap `manifest-example` concatenated together.
+It will match the values stored in the Secret`manifest-example` concatenated together.
 
 4) View the contents of the other Volume Mount `mypass`.
 ```

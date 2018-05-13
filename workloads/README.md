@@ -72,7 +72,7 @@ spec:
 
 **Command**
 ```
-kubectl create -f manifests/rs-example.yaml
+$ kubectl create -f manifests/rs-example.yaml
 ```
 
 2) Watch as the newly created ReplicaSet provisions the Pods based off the Pod Template.
@@ -433,7 +433,7 @@ $ kubectl get pods --show-labels --watch
 ```
 The old version of the DaemonSet will be phased out one at a time and instances of the new version will take its
 place. Similar to Deployments, DaemonSets have their own equivalent to a Deployment's `strategy` in the form of
-`updateStrategy`. The defaults are generally suitable, but other tuning options may be set.For reference, see the
+`updateStrategy`. The defaults are generally suitable, but other tuning options may be set. For reference, see the
 [Updating DaemonSet Documentation](https://kubernetes.io/docs/tasks/manage-daemon/update-daemon-set/#performing-a-rolling-update).
 
 ---
@@ -514,7 +514,7 @@ hostname, network, and storage can be considered **persistent**.
 
 They ensure persistence by making use of three things:
 * The StatefulSet controller enforcing predicable naming, and ordered provisioning/updating/deletion.
-* A headless service to provide a unique network identity
+* A headless service to provide a unique network identity.
 * A volume template to ensure stable per-instance storage.
 ---
 
@@ -604,7 +604,7 @@ $ kubectl edit statefulset sts-example --record
 ```
 $ kubectl get pods --show-labels
 ```
-None of the Pods are being updated to the new version of the Pod. Then immediately get the Pods
+None of the Pods are being updated to the new version of the Pod.
 
 7) Delete the `sts-example-2` Pod.
 ```
@@ -869,7 +869,9 @@ The oldest job should have been removed. The CronJob controller will purge jobs 
 `successfulJobHistoryLimit` and `failedJobHistoryLimit` attributes. In this case, it is retaining strictly the
 last 3 successful jobs.
 
-4) Describe the CronJob `cronjob-example`
+4) Describe the CronJob `cronjob-example` 
+**NOTE:** There is a bug with `kubectl` v1.10.x that is blocking the `describe` on cronjobs. For tracking, see 
+the issue here: [kubernetes/kubectl#486](https://github.com/kubernetes/kubectl/issues/487)
 ```
 $ kubectl describe cronjob cronjob-example
 ```
