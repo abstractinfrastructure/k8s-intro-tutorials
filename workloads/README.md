@@ -420,7 +420,7 @@ Deployment to track and allow for rollback functionality.
 $ kubectl describe ds ds-example
 ```
 
-7) Update the DaemonSet by adding an additional label and use the `--record` flag.
+7) Update the DaemonSet by adding a few additional labels to the Pod Template and use the `--record` flag.
 ```
 $ kubectl apply -f manifests/ds-example.yaml --record
   < or >
@@ -593,7 +593,7 @@ $ kubectl get pvc
 The StatefulSet controller creates a volume for each instance based off the `volumeClaimTemplate`. It prepends
 the volume name to the Pod name. e.g. `www-sts-example-0`.
 
-5) Update the StatefulSet and add an additional Label.
+5) Update the StatefulSet's Pod Template and add a few additional labels.
 ```
 $ kubectl apply -f manifests/sts-example.yaml --record
   < or >
