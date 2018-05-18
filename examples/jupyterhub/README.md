@@ -33,11 +33,9 @@ $ kubectl create \
   -f manifests/cm-ingress.yaml \
   -f manifests/cm-nginx.yaml
 ```
-**[cm-hub-config.yaml](manifests/cm-hub-config.yaml)** - Functions as the Config for JupyterHub and is mounted as a volume within the Hub Pod.
-
-**[cm-ingress.yaml](manifests/cm-ingress.yaml)** - A placeholder empty config used by the nginx ingress controller container within the Proxy Pod.
-
-**[cm-nginx.yaml](manifests/cm-nginx.yaml)** - Nginx specific configuration options.
+* **[cm-hub-config.yaml](manifests/cm-hub-config.yaml)** - Functions as the Config for JupyterHub and is mounted as a volume within the Hub Pod.
+* **[cm-ingress.yaml](manifests/cm-ingress.yaml)** - A placeholder empty config used by the nginx ingress controller container within the Proxy Pod.
+* **[cm-nginx.yaml](manifests/cm-nginx.yaml)** - Nginx specific configuration options.
 
 2. Create the [secret](manifests/secret-hub.yaml) used by the Proxy to authenticate to the Hub.
 ```
@@ -58,13 +56,11 @@ $ kubectl create \
   -f manifests/svc-proxy-public.yaml
 ```
 
-**[svc-hub.yaml](manifests/svc-hub.yaml)** - The internal ClusterIP service that targets the Hub server.
+* **[svc-hub.yaml](manifests/svc-hub.yaml)** - The internal ClusterIP service that targets the Hub server.
+* **[svc-proxy-api.yaml](manifests/svc-proxy-api.yaml)** - Internal ClusterIP service that points to the JupyterHub [Configurable HTTP Proxy (CHP)](https://github.com/jupyterhub/configurable-http-proxy) api within the Proxy Pod.
 
-**[svc-proxy-api.yaml](manifests/svc-proxy-api.yaml)** - Internal ClusterIP service that points to the JupyterHub [Configurable HTTP Proxy (CHP)](https://github.com/jupyterhub/configurable-http-proxy) api within the Proxy Pod.
-
-**[svc-proxy-http.yaml](manifests/svc-proxy-http.yaml)** - Internal ClusterIP service that points to CHP within the Proxy Pod, which in turn points to the Hub server.
-
-**[svc-proxy-public.yaml](manifests/svc-proxy-public.yaml)** - External User facing NodePort Service that maps to nginx within the Proxy pod. This service will direct the User to the Hub server and the spawned User Notebooks.
+* **[svc-proxy-http.yaml](manifests/svc-proxy-http.yaml)** - Internal ClusterIP service that points to CHP within the Proxy Pod, which in turn points to the Hub server.
+* **[svc-proxy-public.yaml](manifests/svc-proxy-public.yaml)** - External User facing NodePort Service that maps to nginx within the Proxy pod. This service will direct the User to the Hub server and the spawned User Notebooks.
 
 5. With everything else provisioned, The two deployments for the Hub Server and Proxy may now be created.
 ```
@@ -73,9 +69,8 @@ $ kubectl create \
  -f manifests/deploy-proxy.yaml
 ```
 
-**[deploy-hub.yaml](manifests/deploy-hub.yaml)** - Hub server deployment.
-
-**[deploy-proxy.yaml](manifests/deploy-proxy.yaml)** - Proxy deployment.
+* **[deploy-hub.yaml](manifests/deploy-hub.yaml)** - Hub server deployment.
+* **[deploy-proxy.yaml](manifests/deploy-proxy.yaml)** - Proxy deployment.
 
 6. Wait for the Pods to be up and running:
 ```
