@@ -1,0 +1,33 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: hub-config
+data:
+  auth.admin.access: "true"
+  auth.state.enabled: "false"
+  auth.type: dummy
+  cull.enabled: "true"
+  cull.every: "600"
+  cull.timeout: "3600"
+  cull.users: "false"
+  hub.base_url: /
+  hub.concurrent-spawn-limit: "64"
+  hub.db_url: sqlite:///jupyterhub.sqlite
+  singleuser.cloud-metadata: |
+    enabled: false
+    ip: 169.254.169.254
+  singleuser.cmd: jupyterhub-singleuser
+  singleuser.fs-gid: "1000"
+  singleuser.memory.guarantee: 100M
+  singleuser.memory.limit: 150M
+  singleuser.network-tools.image.name: jupyterhub/k8s-network-tools
+  singleuser.network-tools.image.tag: v0.6
+  singleuser.node-selector: '{}'
+  singleuser.start-timeout: "300"
+  singleuser.storage.capacity: 10Gi
+  singleuser.storage.extra-volume-mounts: '[]'
+  singleuser.storage.extra-volumes: '[]'
+  singleuser.storage.home_mount_path: /home/jovyan
+  singleuser.storage.type: dynamic
+  singleuser.uid: "1000"
+  token.cookie_secret: ""

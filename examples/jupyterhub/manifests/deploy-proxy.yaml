@@ -1,0 +1,72 @@
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: proxy
+  labels:
+    app: jupyterhub
+    component: proxy
+spec:
+  selector:
+    matchLabels:
+      app: jupyterhub
+      component: proxy
+  template:
+    metadata:
+      labels:
+        app: jupyterhub
+        component: proxy
+    spec:
+      containers:
+      - name: nginx
+        image: quay.io/kubernetes-ingress-controller/nginx-ingress-controller:0.9.0
+        args:
+        - /nginx-ingress-controller
+        - --default-backend-service=default/proxy-http
+        - --configmap=default/nginx-proxy-config
+        - --ingress-class=jupyterhub-proxy
+        - --watch-namespace=default
+        env:
+        - name: POD_NAME
+          valueFrom:
+            fieldRef:
+              apiVersion: v1
+              fieldPath: metadata.name
+        - name: POD_NAMESPACE
+          valueFrom:
+            fieldRef:
+              apiVersion: v1
+              fieldPath: metadata.namespace
+        ports:
+        - name: http
+          containerPort: 80
+          protocol: TCP
+      - name: chp
+        image: jupyterhub/configurable-http-proxy:3.0.0
+        command:
+        - configurable-http-proxy
+        - --ip=0.0.0.0
+        - --port=8000
+        - --api-ip=0.0.0.0
+        - --api-port=8001
+        - --default-target=http://$(HUB_SERVICE_HOST):$(HUB_SERVICE_PORT)
+        - --error-target=http://$(HUB_SERVICE_HOST):$(HUB_SERVICE_PORT)
+        - --log-level=debug
+        env:
+        - name: CONFIGPROXY_AUTH_TOKEN
+          valueFrom:
+            secretKeyRef:
+              key: proxy.token
+              name: hub-secret
+        ports:
+        - name: proxy-public
+          containerPort: 8000
+          protocol: TCP
+        - name: api
+          containerPort: 8001
+          protocol: TCP
+        resources:
+          requests:
+            cpu: 200m
+            memory: 100M
+      serviceAccount: proxy
+      serviceAccountName: proxy

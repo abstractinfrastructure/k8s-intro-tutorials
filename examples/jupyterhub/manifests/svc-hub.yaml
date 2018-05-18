@@ -1,0 +1,14 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: hub
+spec:
+  type: ClusterIP
+  selector:
+    app: jupyterhub
+    component: hub
+  ports:
+  - port: 8081
+    protocol: TCP
+    targetPort: 8081
+

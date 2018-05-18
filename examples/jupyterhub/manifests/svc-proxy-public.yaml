@@ -1,0 +1,15 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: proxy-public
+spec:
+  type: NodePort
+  selector:
+    app: jupyterhub
+    component: proxy
+  ports:
+  - name: http
+    nodePort: 32020
+    port: 80
+    protocol: TCP
+    targetPort: 80

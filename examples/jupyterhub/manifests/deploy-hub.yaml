@@ -1,0 +1,67 @@
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: hub
+  labels:
+    app: jupyterhub
+    component: hub
+spec:
+  selector:
+    matchLabels:
+      app: jupyterhub
+      component: hub
+  template:
+    metadata:
+      labels:
+        app: jupyterhub
+        component: hub
+    spec:
+      containers:
+      - name: hub-container
+        image: jupyterhub/k8s-hub:v0.6
+        command: [ "jupyterhub", "--config", "/srv/jupyterhub_config.py", "--upgrade-db" ]
+        env:
+        - name: SINGLEUSER_IMAGE
+          value: jupyterhub/k8s-singleuser-sample:v0.6
+        - name: POD_NAMESPACE
+          valueFrom:
+            fieldRef:
+              apiVersion: v1
+              fieldPath: metadata.namespace
+        - name: CONFIGPROXY_AUTH_TOKEN
+          valueFrom:
+            secretKeyRef:
+              key: proxy.token
+              name: hub-secret
+        ports:
+        - name: hub
+          containerPort: 8081
+          protocol: TCP
+        resources:
+          requests:
+            cpu: 200m
+            memory: 100M
+        volumeMounts:
+        - name: config
+          mountPath: /etc/jupyterhub/config/
+        - name: secret
+          mountPath: /etc/jupyterhub/secret/
+        - name: hub-db-dir
+          mountPath: /srv/jupyterhub
+      securityContext:
+        fsGroup: 1000
+        runAsUser: 1000
+      serviceAccount: hub
+      serviceAccountName: hub
+      volumes:
+      - name: config
+        configMap:
+          name: hub-config
+          defaultMode: 420
+      - name: secret
+        secret:
+          secretName: hub-secret
+          defaultMode: 420
+      - name: hub-db-dir
+        persistentVolumeClaim:
+          claimName: hub-db-dir
