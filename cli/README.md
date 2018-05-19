@@ -599,7 +599,7 @@ http://127.0.0.1:8001/api/v1/namespaces/kube-system/services/kubernetes-dashboar
 
 5) Lastly, access the Dashboard through minikube.
 ```
-$ minikube proxy
+$ minikube dashboard
 ```
 
 ---
