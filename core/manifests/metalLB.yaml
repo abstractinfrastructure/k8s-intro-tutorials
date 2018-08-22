@@ -67,22 +67,6 @@ apiVersion: rbac.authorization.k8s.io/v1
 kind: Role
 metadata:
   namespace: metallb-system
-  name: leader-election
-  labels:
-    app: metallb
-rules:
-- apiGroups: [""]
-  resources: ["endpoints"]
-  resourceNames: ["metallb-speaker"]
-  verbs: ["get", "update"]
-- apiGroups: [""]
-  resources: ["endpoints"]
-  verbs: ["create"]
----
-apiVersion: rbac.authorization.k8s.io/v1
-kind: Role
-metadata:
-  namespace: metallb-system
   name: config-watcher
   labels:
     app: metallb
@@ -143,22 +127,7 @@ roleRef:
   kind: Role
   name: config-watcher
 ---
-apiVersion: rbac.authorization.k8s.io/v1
-kind: RoleBinding
-metadata:
-  namespace: metallb-system
-  name: leader-election
-  labels:
-    app: metallb
-subjects:
-- kind: ServiceAccount
-  name: speaker
-roleRef:
-  apiGroup: rbac.authorization.k8s.io
-  kind: Role
-  name: leader-election
----
-apiVersion: apps/v1beta2
+apiVersion: apps/v1
 kind: DaemonSet
 metadata:
   namespace: metallb-system
@@ -185,7 +154,7 @@ spec:
       hostNetwork: true
       containers:
       - name: speaker
-        image: metallb/speaker:master
+        image: metallb/speaker:v0.7.2
         imagePullPolicy: Always
         args:
         - --port=7472
@@ -202,6 +171,7 @@ spec:
           limits:
             cpu: 100m
             memory: 100Mi
+          
         securityContext:
           allowPrivilegeEscalation: false
           readOnlyRootFilesystem: true
@@ -212,7 +182,7 @@ spec:
             - net_raw
 
 ---
-apiVersion: apps/v1beta2
+apiVersion: apps/v1
 kind: Deployment
 metadata:
   namespace: metallb-system
@@ -242,7 +212,7 @@ spec:
         runAsUser: 65534 # nobody
       containers:
       - name: controller
-        image: metallb/controller:master
+        image: metallb/controller:v0.7.1
         imagePullPolicy: Always
         args:
         - --port=7472
@@ -254,6 +224,7 @@ spec:
           limits:
             cpu: 100m
             memory: 100Mi
+          
         securityContext:
           allowPrivilegeEscalation: false
           capabilities:

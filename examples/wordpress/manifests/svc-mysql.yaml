@@ -1,0 +1,14 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: mysql
+  labels:
+    app: wordpress
+    component: mysql
+spec:
+  ports:
+    - port: 3306
+  selector:
+    app: wordpress
+    component: mysql
+  clusterIP: None
