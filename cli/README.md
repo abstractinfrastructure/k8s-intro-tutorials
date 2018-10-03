@@ -79,7 +79,7 @@ $ kubectl config view
 ```
 
 **Example**
-```
+```yaml
 $ kubectl config view
 apiVersion: v1
 clusters:

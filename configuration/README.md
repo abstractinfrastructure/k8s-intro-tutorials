@@ -42,7 +42,7 @@ ConfigMaps can be created from a manifest, literals, a directory, or from the fi
 Create ConfigMap `manifest-example` from the manifest `manifests/cm-manifest.yaml` or use the yaml below.
 
 **manifests/cm-manifest.yaml**
-```
+```yaml
 apiVersion: v1
 kind: ConfigMap
 metadata:
@@ -59,7 +59,7 @@ $ kubectl create -f manifests/cm-manifest.yaml
 
 View the created ConfigMap.
 ```
-$ kubectl get cm manifest-example -o yaml
+$ kubectl get configmap manifest-example -o yaml
 ```
 
 #### From Literal
@@ -67,7 +67,7 @@ $ kubectl get cm manifest-example -o yaml
 Create ConfigMap `literal-example` using the `--from-literal` flag and `city=Ann Arbor` along with `state=Michigan`
 for the values.
 ```
-$ kubectl create configmap literal-example --from-literal="city=Ann Arbor" --from-literal=state=Michigan
+$ kubectl create cm literal-example --from-literal="city=Ann Arbor" --from-literal=state=Michigan
 ```
 
 View the created ConfigMap.
@@ -99,6 +99,9 @@ View the created ConfigMap.
 $ kubectl get cm file-example -o yaml
 ```
 
+**Note:** When creating a ConfigMap from a file or directory the content will assume to be multiline as signified by 
+the pipe symbol (`|`) in the yaml.
+
 ---
 
 **Summary:** There are four primary methods of creating ConfigMaps with `kubectl`. From a manifest, passing literals
@@ -119,7 +122,7 @@ have not, complete it first before continuing.
 1) Create Job `cm-env-example` using the manifest `manifests/cm-env-example.yaml` or the yaml below.
 
 **manifests/cm-env-example.yaml**
-```
+```yaml
 apiVersion: batch/v1
 kind: Job
 metadata:
@@ -149,9 +152,9 @@ $ kubectl create -f manifests/cm-env-example.yaml
 Note how the Environment Variable is injected using `valueFrom` and `configMapKeyRef`. This queries a specific key
 from the ConfigMap and injects it as an Environment Variable.
 
-2) List the Pods passing `--show-all` to view the completed job.
+2) List the Pods.
 ```
-$ kubectl get pods --show-all
+$ kubectl get pods
 ```
 
 3) Copy the pod name and view the output of the Job.
@@ -165,7 +168,7 @@ This same technique can be used to inject the value for use in a Command.
 4) Create another Job `cm-cmd-example` from the manifest `manifests/cm-cmd-example.yaml` or use the yaml below.
 
 **manifests/cm-cmd-example.yaml**
-```
+```yaml
 apiVersion: batch/v1
 kind: Job
 metadata:
@@ -192,9 +195,9 @@ spec:
 $ kubectl create -f manifests/cm-cmd-example.yaml
 ```
 
-5) List the Pods passing `--show-all` to view the completed job.
+5) List the Pods.
 ```
-$ kubectl get pods --show-all
+$ kubectl get pods
 ```
 
 3) Copy the pod name of the `cm-cmd-example` job and view the output of the Pod.
@@ -229,7 +232,7 @@ have not, complete it first before continuing.
 1) Create the Pod `cm-vol-example` using the manifest `manifests/cm-vol-example.yaml` or use the yaml below.
 
 **manifests/cm-vol-example.yaml**
-```
+```yaml
 apiVersion: v1
 kind: Pod
 metadata:
@@ -284,7 +287,7 @@ It will match the values stored in the configMap `manifest-example` concatenated
 
 4) View the contents of the other Volume Mount `mycity`.
 ```
-/ # kubectl exec cm-vol-example -- ls /mycity
+$ kubectl exec cm-vol-example -- ls /mycity
 ```
 A file will be present that represents the single item being referenced in the `city` volume. This file bears the
 name `thisismycity` as specified by the `path` variable.
@@ -307,6 +310,7 @@ avenue to further decouple application from configuration.
 **Clean Up Command:**
 ```
 $ kubectl delete pod cm-vol-example
+$ kubectl delete cm dir-example file-example literal-example manifest-example
 ```
 
 ---
@@ -341,7 +345,7 @@ ConfigMap counterparts.
 Create Secret `manifest-example` from the manifest `manifests/secret-manifest.yaml` or use the yaml below.
 
 **manifests/secret-manifest.yaml**
-```
+```yaml
 apiVersion: v1
 kind: Secret
 metadata:
@@ -373,6 +377,11 @@ for the values.
 ```
 $ kubectl create secret generic literal-example --from-literal=username=example --from-literal=password=mypassword
 ```
+**Note:** Unlike ConfigMaps you **must** also specify the type of secret you are creating. There are 3 types:
+* docker-registry - Credentials used to interact with a container registry.
+* generic - Eeuivalent to `Opaque`. Used for unstructured data.
+* tls - A TLS key pair (PEM Format) that accepts a cert (`--cert`) and key (`--key`).
+
 
 View the created Secret.
 ```
@@ -424,7 +433,7 @@ have not, complete it first before continuing.
 1) Create Job `secret-env-example` using the manifest `manifests/secret-env-example.yaml` or the yaml below.
 
 **manifests/secret-env-example.yaml**
-```
+```yaml
 apiVersion: batch/v1
 kind: Job
 metadata:
@@ -454,9 +463,9 @@ $ kubectl create -f manifests/secret-env-example.yaml
 Note how the Environment Variable is injected using `valueFrom` and `secretKeyRef`. This queries a specific key
 from the Secret and injects it as an Environment Variable.
 
-2) List the Pods passing `--show-all` to view the completed job.
+2) List the Pods.
 ```
-$ kubectl get pods --show-all
+$ kubectl get pods
 ```
 
 3) Copy the pod name and view the output of the Job.
@@ -470,7 +479,7 @@ This same technique can be used to inject the value for use in a Command.
 4) Create another Job `secret-cmd-example` from the manifest `manifests/secret-cmd-example.yaml` or use the yaml below.
 
 **manifests/secret-cmd-example.yaml**
-```
+```yaml
 apiVersion: batch/v1
 kind: Job
 metadata:
@@ -497,9 +506,9 @@ spec:
 $ kubectl create -f manifests/secret-cmd-example.yaml
 ```
 
-5) List the Pods passing `--show-all` to view the completed job.
+5) List the Pods.
 ```
-$ kubectl get pods --show-all
+$ kubectl get pods
 ```
 
 3) Copy the pod name of the `secret-cmd-example` job and view the output of the Pod.
@@ -534,7 +543,7 @@ have not, complete it first before continuing.
 1) Create the Pod `secret-vol-example` using the manifest `manifests/secret-vol-example.yaml` or use the yaml below.
 
 **manifests/secret-vol-example.yaml**
-```
+```yaml
 apiVersion: v1
 kind: Pod
 metadata:
@@ -571,8 +580,8 @@ spec:
 $ kubectl create -f manifests/secret-vol-example.yaml
 ```
 
-Note the volumes and how they are being referenced. The volume `password`, has an array of `items` that contains a sub-set
-of the key-value pairs stored in the `manifest-example` Secret. When working with the individual items, it is
+Note the volumes and how they are being referenced. The volume `password`, has an array of `items` that contains a
+sub-set of the key-value pairs stored in the `manifest-example` Secret. When working with the individual items, it is
 possible to override the name or path to the generated file by supplying an argument for the `path` parameter.
 
 2) View the contents of the `/mysecret` volume mount.
@@ -585,11 +594,11 @@ It will contain two files, matching the names of the keys stored in Secret `mani
 ```
 $ kubectl exec secret-vol-example -- /bin/sh -c "cat /mysecret/*"
 ```
-It will match the values stored in the Secret`manifest-example` concatenated together.
+It will match the values stored in the Secret `manifest-example` concatenated together.
 
 4) View the contents of the other Volume Mount `mypass`.
 ```
-/ # kubectl exec secret-vol-example -- ls /mypass
+$ kubectl exec secret-vol-example -- ls /mypass
 ```
 A file will be present that represents the single item being referenced in the `password` volume. This file bears the
 name `supersecretpass` as specified by the `path` variable.
@@ -611,6 +620,7 @@ items stored in a Secret. These items can be renamed or be made read-only to mee
 **Clean Up Command:**
 ```
 $ kubectl delete pod secret-vol-example
+$ kubectl delete secret dir-example file-example literal-example manifest-example
 ```
 
 ---

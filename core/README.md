@@ -85,7 +85,7 @@ their exposed services through the API Server proxy.
 manifest `manifests/pod-example.yaml` or the yaml below.
 
 **manifests/pod-example.yaml**
-```
+```yaml
 apiVersion: v1
 kind: Pod
 metadata:
@@ -125,7 +125,7 @@ The default **"Welcome to nginx!"** page should be visible.
 `manifests/pod-multi-container-example.yaml` or create a new one yourself with the below yaml.
 
 **manifests/pod-multi-container-example.yaml**
-```
+```yaml
 apiVersion: v1
 kind: Pod
 metadata:
@@ -214,7 +214,7 @@ $ kubectl get pods --show-labels
 then apply it via `kubectl`.
 
 **manifests/pod-multi-container-example.yaml**
-```
+```yaml
 apiVersion: v1
 kind: Pod
 metadata:
@@ -304,7 +304,7 @@ resource (unlike Pods) that is given a static cluster-unique IP and provide simp
 either the yaml below, or the manifest `manifests/service-clusterip.yaml`.
 
 **manifests/service-clusterip.yaml**
-```
+```yaml
 apiVersion: v1
 kind: Service
 metadata:
@@ -365,7 +365,7 @@ forwarding port `80` in cluster, and port `32410` on the node itself. Use either
 `manifests/service-nodeport.yaml`.
 
 **manifests/service-nodeport.yaml**
-```
+```yaml
 apiVersion: v1
 kind: Service
 metadata:
@@ -436,7 +436,7 @@ $ kubectl create -f manifests/metalLB.yaml
 `manifests/service--loadbalancer.yaml`.
 
 **manifests/service-loadbalancer.yaml**
-```
+```yaml
 apiVersion: v1
 kind: Service
 metadata:
