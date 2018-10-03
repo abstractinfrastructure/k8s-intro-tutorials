@@ -156,8 +156,8 @@ and Pod.
 
 ---
 
-1) Create a deployment `deploy-example`. Configure it using the example yaml block below or use the manifest
-`manifests/deploy-example.yaml`. Additionally pass the `--record` flag to `kubectl` when you create the Deployment.
+1) Create a deployment `deploy-example`. Configure it using the example yaml block below or use the manifest 
+`manifests/deploy-example.yaml`. Additionally pass the `--record` flag to `kubectl` when you create the Deployment. 
 The `--record` flag saves the command as an annotation, and it can be thought of similar to a git commit message.
 
 **manifests/deployment-example.yaml**
@@ -212,7 +212,7 @@ associated with the Deployment.
 $ kubectl describe rs deploy-example-<safe-pod-template-hash>
 ```
 Look at both the `Labels` and the `Selectors` fields. The `pod-template-hash` value has automatically been added to
-both the Labels and Selector of the ReplicaSet. Then take note of the `Controlled By` field, this will reference the
+both the Labels and Selector of the ReplicaSet. Then take note of the `Controlled By` field. This will reference the
 direct parent object, and in this case the original `deploy-example` Deployment.
 
 5) Now, get the pods and pass the `--show-labels` flag.
@@ -226,7 +226,7 @@ in their name.
 ```
 $ kubectl describe pod deploy-example-<safe-pod-template-hash-<random>
 ```
-Look at the `Controlled By` field; it will contain a reference to the parent ReplicaSet, but not the parent Deployment.
+Look at the `Controlled By` field. It will contain a reference to the parent ReplicaSet, but not the parent Deployment.
 
 Now that the relationship from Deployment to ReplicaSet to Pod is understood. It is time to update the
 `deploy-example` and see an update in action.
@@ -419,6 +419,7 @@ Deployment to track and allow for rollback functionality.
 ```
 $ kubectl describe ds ds-example
 ```
+**Tip:** `ds` can be substituted for `daemonset` when using `kubectl`.
 
 7) Update the DaemonSet by adding a few additional labels to the Pod Template and use the `--record` flag.
 ```
@@ -462,7 +463,7 @@ $ kubectl rollout history ds ds-example
 There should be two revisions. One for when the Deployment was first created, and another when the additional Labels
 were added. The number of revisions saved is based off of the `revisionHistoryLimit` attribute in the DaemonSet spec.
 
-2) Look at the details of a specific revision by passing the `--revision=<reivision number>` flag.
+2) Look at the details of a specific revision by passing the `--revision=<revision number>` flag.
 ```
 $ kubectl rollout history ds ds-example --revision=1
 $ kubectl rollout history ds ds-example --revision=2
@@ -475,7 +476,7 @@ $ kubectl rollout undo ds ds-example --to-revision=1
 ```
 **Tip:** The `--to-revision` flag can be omitted if you wish to just go back to the previous configuration.
 
-4) Immediatly watch the Pods.
+4) Immediately watch the Pods.
 ```
 $ kubectl get pods --show-labels --watch
 ```
@@ -646,7 +647,7 @@ $ kubectl get pvc
 Created PVCs are **NOT** garbage collected automatically when a StatefulSet is deleted. They must be reclaimed
 independently of the StatefulSet itself.
 
-13) Recreate the StatefulSet using the same manifest, ensure that .
+13) Recreate the StatefulSet using the same manifest.
 ```
 $ kubectl create -f manifests/sts-example.yaml --record
 ```
@@ -756,7 +757,7 @@ CronJobs are an extension of the Job Controller, and enable Jobs to be run on a 
 
 ---
 
-1) Create job `job-example` using yaml below, or the manifest located at `manifests/job-example.yaml`
+1) Create job `job-example` using the yaml below, or the manifest located at `manifests/job-example.yaml`
 
 **manifests/job-example.yaml**
 ```yaml
@@ -789,8 +790,10 @@ $ kubectl get pods --show-labels --watch
 ```
 Only two Pods are being provisioned at a time; adhering to the `parallelism` attribute. This is done until the total
 number of `completions` is satisfied. Additionally, the Pods are labeled with `controller-uid`, this acts as a
-unique ID for that specific job. When done, the Pods persist in a `Completed` state. They are not deleted after
-the job is completed or failed. This is intentional to better support troubleshooting.
+unique ID for that specific job. 
+
+When done, the Pods persist in a `Completed` state. They are not deleted after the job is completed or failed. 
+This is intentional to better support troubleshooting.
 
 3) A summary of these events can be seen by describing the job itself.
 ```
@@ -802,9 +805,9 @@ $ kubectl describe job job-example
 $ kubectl delete job job-example
 ```
 
-5) View the Pods once more passing the `--show-all` flag.
+5) View the Pods once more.
 ```
-$ kubectl get pods --show-all
+$ kubectl get pods
 ```
 The Pods will now be deleted. They are cleaned up when the job itself is removed.
 
@@ -833,7 +836,7 @@ metadata:
   name: cronjob-example
 spec:
   schedule: "*/1 * * * *"
-  successfulJobsHistoryLimit: 3
+  successfulJobsHistoryLimit: 2
   failedJobsHistoryLimit: 1
   jobTemplate:
     spec:
@@ -901,7 +904,6 @@ only caveat being they adhere to a **UTC ONLY** schedule.
 
 **Clean Up Commands**
 ```
-$ kubectl delete job job-example
 $ kubectl delete cronjob cronjob-example
 ```
 

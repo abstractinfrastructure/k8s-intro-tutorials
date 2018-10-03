@@ -203,8 +203,9 @@ mypod     1/1       Running   0          5m        172.17.0.6   minikube
 ---
 
 ### `kubectl create`
-`kubectl create` creates an object from a json, yaml manifest or optionally `stdin`. The manifests can be specified with
-the `-f` or `--filename` flag that can point to either a file, or a directory containing multiple manifests.
+`kubectl create` creates an object from the commandline (`stdin`) or a supplied json/yaml manifest. The manifests can be
+specified with the `-f` or  `--filename` flag that can point to either a file, or a directory containing multiple 
+manifests.
 
 **Command**
 ```
@@ -224,9 +225,9 @@ pod "mypod" created
 ---
 
 ### `kubectl apply`
-`kubectl apply` is similar to `kubectl create`, however it will essentially update the resource if it is already
-created, or simply create it if does not yet exist. When it updates the config, it will save the previous version of
-it in an `annotation` on the created object itself. **WARNING:** If the object was not created initially with
+`kubectl apply` is similar to `kubectl create`. It will essentially update the resource if it is already created, or
+simply create it if does not yet exist. When it updates the config, it will save the previous version of it in an
+`annotation` on the created object itself. **WARNING:** If the object was not created initially with
 `kubectl apply` it's updating behavior will act as a two-way diff. For more information on this, please see the
 [kubectl apply](https://kubernetes.io/docs/concepts/cluster-administration/manage-deployment/#kubectl-apply)
 documentation.
@@ -368,7 +369,7 @@ what was created.
 
 ---
 
-1) Create the `dev` namespace
+1) Create the `dev` namespace.
 ```
 kubectl create namespace dev
 ```
@@ -498,8 +499,8 @@ debugging.
 ---
 
 ### `kubectl proxy`
-`kubectl proxy` enables access to both the Kubernetes API-Server or to a resource running within the cluster
-securely from `kubectl`. By default it creates a connection to the API-Server that can be accessed at
+`kubectl proxy` enables access to both the Kubernetes API-Server and to resources running within the cluster
+securely using `kubectl`. By default it creates a connection to the API-Server that can be accessed at
 `127.0.0.1:8001` or an alternative port by supplying the `-p` or `--port` flag.
 
 
@@ -552,7 +553,7 @@ http://127.0.0.1:8001/api/v1/namespaces/kube-system/services/kubernetes-dashboar
 ### Dashboard
 
 While the Kubernetes Dashboard is not something that is required to be deployed in a cluster, it frequently is and is
-a handy tool to quickly explore the system; however it should not be relied upon for cluster support.
+a handy tool to quickly explore the system. **However**, it should not be relied upon for cluster support.
 
 ![Kubernetes Dashboard](images/dashboard.png)
 
@@ -591,16 +592,19 @@ $ kubectl proxy
 ```
 http://127.0.0.1:8001/api/v1/namespaces/dev/pods/mypod/proxy/
 ```
+You should see the "Welcome to nginx!" page.
+
 
 4) Access the Dashboard through the proxy.
 ```
 http://127.0.0.1:8001/api/v1/namespaces/kube-system/services/kubernetes-dashboard/proxy/
 ```
 
-5) Lastly, access the Dashboard through minikube.
+5) Lastly, stop the proxy (`CTRL+C`) and access the Dashboard through minikube.
 ```
 $ minikube dashboard
 ```
+Minikube offers a convenient shortcut to access the dashboard (without the proxy) for local development use.
 
 ---
 
@@ -615,17 +619,17 @@ external IP, or create firewall rules is an incredibly useful tool for troublesh
 ---
 
 ## Cleaning up
+**NOTE:** If you are proceeding with the next tutorials, simply delete the pod with:
+```
+$ kubectl delete pod mypod
+```
+The namespace and context will be reused. 
+
 To remove everything that was created in this tutorial, execute the following commands:
 ```
 $ kubectl delete namespace dev
 $ kubectl config delete-context minidev
 ```
-
-**NOTE:** If you are proceeding with the next tutorials, simply delete the pod with:
-```
-$ kubectl delete pod mypod
-```
-The namespace and context will be reused.
 
 ---
 

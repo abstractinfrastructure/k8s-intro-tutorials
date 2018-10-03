@@ -6,7 +6,12 @@ These tutorials accompany the presentation [Introduction to Kubernetes](https://
 and make use of [Minikube](https://github.com/kubernetes/minikube). A tool that allows users to quickly spin up and
 run a single instance of Kubernetes locally using a variety of virtualization engines.
 
-Each section assumes an instance of minikube is up and running (`minikube start`).
+Each section assumes an instance of minikube is up and running. To start minikube, use the `minikube start` command, 
+or if launching a specific version of Kubernetes use the `--kubernetes-version` flag the first time you start
+```
+minikube start --kubernetes-version <version>
+minikube start --kubernetes-version v1.11.3
+```
 
 Tutorials have been validated against minikube v0.28 running Kubernetes v1.10.
 
