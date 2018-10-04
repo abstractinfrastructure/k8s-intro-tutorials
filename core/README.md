@@ -1,7 +1,7 @@
 # Exploring the Core
 
-This tutorial covers the  fundamental building blocks that make up Kubernetes. Understanding what these components are
-and how they are used is crucial to learning how to use the more powerful higher level objects and resources.
+This tutorial covers the fundamental building blocks that make up Kubernetes. Understanding what these components are
+and how they are used is crucial to learning how to use the higher level objects and resources.
 
 # Index
 * [Namespaces](#namespaces)
@@ -85,7 +85,7 @@ their exposed services through the API Server proxy.
 manifest `manifests/pod-example.yaml` or the yaml below.
 
 **manifests/pod-example.yaml**
-```
+```yaml
 apiVersion: v1
 kind: Pod
 metadata:
@@ -125,7 +125,7 @@ The default **"Welcome to nginx!"** page should be visible.
 `manifests/pod-multi-container-example.yaml` or create a new one yourself with the below yaml.
 
 **manifests/pod-multi-container-example.yaml**
-```
+```yaml
 apiVersion: v1
 kind: Pod
 metadata:
@@ -145,7 +145,7 @@ spec:
     command: ["/bin/sh", "-c"]
     args:
       - while true; do
-          date >> /html/index.html;
+          echo $(date)"<br />" >> /html/index.html;
           sleep 5;
         done
   volumes:
@@ -155,10 +155,9 @@ spec:
 
 **Command**
 ```
-$ kubectl create -f /manifests/pod-multi-container-example.yaml
+$ kubectl create -f manifests/pod-multi-container-example.yaml
 ```
-
-`spec.containers` is an array allowing you to use multiple containers within a Pod.
+**Note:** `spec.containers` is an array allowing you to use multiple containers within a Pod.
 
 6) Use the proxy to verify the web server running in the deployed pod.
 
@@ -215,7 +214,7 @@ $ kubectl get pods --show-labels
 then apply it via `kubectl`.
 
 **manifests/pod-multi-container-example.yaml**
-```
+```yaml
 apiVersion: v1
 kind: Pod
 metadata:
@@ -256,19 +255,20 @@ $ kubectl apply -f manifests/pod-multi-container-example.yaml
 $ kubectl get pods --show-labels
 ```
 
-5) With the objects now labeled, use an equality based selector targeting the `prod` environment.
+5) With the objects now labeled, use an [equality based selector](https://kubernetes.io/docs/concepts/overview/working-with-objects/labels/#equality-based-requirement) 
+targeting the `prod` environment.
 
 ```
 $ kubectl get pods --selector environment=prod
 ```
 
-6) Do the same targeting the `nginx` app.
+6) Do the same targeting the `nginx` app with the short version of the selector flag (`-l`).
 ```
 $ kubectl get pods -l app=nginx
 ```
 
-7) Use a set-based selector to view all pods where the `app` label is `nginx` and filter out any that are in the
-`prod` environment.
+7) Use a [set-based selector](https://kubernetes.io/docs/concepts/overview/working-with-objects/labels/#set-based-requirement)
+to view all pods where the `app` label is `nginx` and filter out any that are in the `prod` environment.
 
 ```
 $ kubectl get pods -l 'app in (nginx), environment notin (prod)'
@@ -300,11 +300,11 @@ resource (unlike Pods) that is given a static cluster-unique IP and provide simp
 
 ---
 
-1) Create `ClusterIP` service `clusterip` that targets pods labeled with the `app=nginx` forwarding port `80` using
+1) Create `ClusterIP` service `clusterip` that targets pods labeled with `app=nginx` forwarding port `80` using
 either the yaml below, or the manifest `manifests/service-clusterip.yaml`.
 
 **manifests/service-clusterip.yaml**
-```
+```yaml
 apiVersion: v1
 kind: Service
 metadata:
@@ -323,7 +323,7 @@ spec:
 $ kubectl create -f manifests/service-clusterip.yaml
 ```
 
-2) Describe the newly created service Endpoints. Note the `IP` and the `Endpoints` fields.
+2) Describe the newly created service. Note the `IP` and the `Endpoints` fields.
 ```
 $ kubectl describe service clusterip
 ```
@@ -365,7 +365,7 @@ forwarding port `80` in cluster, and port `32410` on the node itself. Use either
 `manifests/service-nodeport.yaml`.
 
 **manifests/service-nodeport.yaml**
-```
+```yaml
 apiVersion: v1
 kind: Service
 metadata:
@@ -436,7 +436,7 @@ $ kubectl create -f manifests/metalLB.yaml
 `manifests/service--loadbalancer.yaml`.
 
 **manifests/service-loadbalancer.yaml**
-```
+```yaml
 apiVersion: v1
 kind: Service
 metadata:
