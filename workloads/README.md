@@ -4,7 +4,11 @@ Workloads within Kubernetes are higher level objects that manage Pods or other h
 
 In **ALL CASES** a Pod Template is included, and acts as the base tier of management.
 
-**Note:** Unlike some of the other tutorials, the workload exercises should be cleaned up before moving onto the next
+**Note:** 
+1) If you are coming directly from the previous tutorials (core), you may still be configured to use the
+`minidev` context. Switch to the `minikube` context before proceeding with the rest of the tutorials.
+
+2) Unlike some of the other tutorials, the workload exercises should be cleaned up before moving onto the next
  workload type. The clean-up commands will included after **Summary** section of the exercise.
 
 # Index
@@ -873,8 +877,6 @@ The oldest job should have been removed. The CronJob controller will purge jobs 
 last 3 successful jobs.
 
 4) Describe the CronJob `cronjob-example` 
-**NOTE:** There is a bug with `kubectl` v1.10.x that is blocking the `describe` on cronjobs. For tracking, see 
-the issue here: [kubernetes/kubectl#486](https://github.com/kubernetes/kubectl/issues/487)
 ```
 $ kubectl describe cronjob cronjob-example
 ```
@@ -890,7 +892,7 @@ an issue without having to delete the CronJob directly.
 
 5) Delete the cronjob
 ```
-$ kubectl delete cronjob
+$ kubectl delete cronjob cronjob-example
 ```
 Deleting the CronJob **WILL** delete all child jobs. Use `Suspend` to _'stop'_ the job temporarily if attempting
 to troubleshoot.

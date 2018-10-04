@@ -145,7 +145,7 @@ spec:
     command: ["/bin/sh", "-c"]
     args:
       - while true; do
-          date >> /html/index.html;
+          echo $(date)"<br />" >> /html/index.html;
           sleep 5;
         done
   volumes:

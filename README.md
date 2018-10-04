@@ -16,7 +16,7 @@ To launch an alternative version of kubernetes within your minikube instance, su
 minikube start --kubernetes-version <version string>
 ```
 
-Tutorials have been validated against minikube v0.29 running Kubernetes v1.11.x.
+Tutorials have been validated against minikube v0.29 running Kubernetes v1.11.x and kubectl 1.11.x/1.12.0
 
 
 ## Installation Guides
