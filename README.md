@@ -8,7 +8,7 @@ run a single instance of Kubernetes locally using a variety of virtualization en
 
 Each section assumes an instance of minikube is up and running. To start minikube for the first time, use the command:
 ```
-minikube start --kubernetes-version v1.11.3
+minikube start --kubernetes-version v1.12.1
 ```
 
 To launch an alternative version of kubernetes within your minikube instance, supply an alternate version string:
@@ -16,7 +16,7 @@ To launch an alternative version of kubernetes within your minikube instance, su
 minikube start --kubernetes-version <version string>
 ```
 
-Tutorials have been validated against minikube v0.29 running Kubernetes v1.11.x and kubectl 1.11.x/1.12.0
+Tutorials have been validated against minikube v0.30 running Kubernetes v1.12.x and kubectl 1.12.0
 
 
 ## Installation Guides
@@ -40,6 +40,7 @@ completed.
 ---
 
 ## OSX Installation Guide
+
 Installation on OSX is done with [Homebrew](https://brew.sh/), an OSX package manager. If you have not installed it
 previously, please see their [installation guide](https://brew.sh/) before continuing.
 

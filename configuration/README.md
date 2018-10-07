@@ -377,7 +377,7 @@ for the values.
 ```
 $ kubectl create secret generic literal-example --from-literal=username=example --from-literal=password=mypassword
 ```
-**Note:** Unlike ConfigMaps you **must** also specify the type of secret you are creating. There are 3 types:
+**Note:** Unlike ConfigMaps you **must** also specify the type of Secret you are creating. There are 3 types:
 * docker-registry - Credentials used to interact with a container registry.
 * generic - Eeuivalent to `Opaque`. Used for unstructured data.
 * tls - A TLS key pair (PEM Format) that accepts a cert (`--cert`) and key (`--key`).

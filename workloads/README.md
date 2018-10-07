@@ -32,7 +32,7 @@ In **ALL CASES** a Pod Template is included, and acts as the base tier of manage
 ---
 
 # ReplicaSets
-ReplicaSets are the primary method of managing pod replicas and their lifecycle. This includes their scheduling,
+ReplicaSets are the primary method of managing Pod replicas and their lifecycle. This includes their scheduling,
 scaling, and deletion.
 
 Their job is simple, **always** ensure the desired number of `replicas` that match the selector are running.
@@ -108,13 +108,13 @@ $ kubectl scale rs rs-example --replicas=3
 $ kubectl get pods --show-labels --watch
 ```
 
-7) Once `rs-example` is back down to 3 pods. Create an independent pod manually with the same labels as the one
+7) Once `rs-example` is back down to 3 Pods. Create an independent Pod manually with the same labels as the one
 targeted by `rs-example` from the manifest `manifests/pod-rs-example.yaml`.
 ```
 $ kubectl create -f manifests/pod-rs-example.yaml
 ```
 
-8) Immediately watch the pods.
+8) Immediately watch the Pods.
 ```
 $ kubectl get pods --show-labels --watch
 ```
@@ -124,7 +124,7 @@ Note that the Pod is created and immediately terminated.
 ```
 $ kubectl describe rs rs-example
 ```
-There will be an entry with `Deleted pod: pod-example`. This is because a ReplicaSet targets **ALL** pods matching
+There will be an entry with `Deleted pod: pod-example`. This is because a ReplicaSet targets **ALL** Pods matching
 the labels supplied in the selector.
 
 ---
@@ -160,7 +160,7 @@ and Pod.
 
 ---
 
-1) Create a deployment `deploy-example`. Configure it using the example yaml block below or use the manifest 
+1) Create a Deployment `deploy-example`. Configure it using the example yaml block below or use the manifest 
 `manifests/deploy-example.yaml`. Additionally pass the `--record` flag to `kubectl` when you create the Deployment. 
 The `--record` flag saves the command as an annotation, and it can be thought of similar to a git commit message.
 
@@ -198,37 +198,35 @@ spec:
 $ kubectl create -f manifests/deploy-example.yaml --record
 ```
 
-2) Check the status of the deployment.
+2) Check the status of the Deployment.
 ```
 $ kubectl get deployments
 ```
 
-3) Once the deployment is ready, view the current ReplicaSets and be sure to show the labels.
+3) Once the Deployment is ready, view the current ReplicaSets and be sure to show the labels.
 ```
 $ kubectl get rs --show-labels
 ```
-Note the name and `pod-template-hash` label of newly created ReplicaSet. The name of the generated ReplicaSet is
-a _"safe"_ hash version of the `pod-template-hash` value. This value represents the hash of the Pod Template
-associated with the Deployment.
+Note the name and `pod-template-hash` label of the newly created ReplicaSet. The created ReplicaSet's name will
+include the `pod-template-hash`.
 
 4) Describe the generated ReplicaSet.
 ```
-$ kubectl describe rs deploy-example-<safe-pod-template-hash>
+$ kubectl describe rs deploy-example-<pod-template-hash>
 ```
 Look at both the `Labels` and the `Selectors` fields. The `pod-template-hash` value has automatically been added to
 both the Labels and Selector of the ReplicaSet. Then take note of the `Controlled By` field. This will reference the
 direct parent object, and in this case the original `deploy-example` Deployment.
 
-5) Now, get the pods and pass the `--show-labels` flag.
+5) Now, get the Pods and pass the `--show-labels` flag.
 ```
 $ kubectl get pods --show-labels
 ```
-Just as with the ReplicaSet, the pods are labeled with `pod-template-hash` and contain the _"safe"_ pod-template-hash
-in their name.
+Just as with the ReplicaSet, the Pods name are labels include the `pod-template-hash`.
 
 6) Describe one of the Pods.
 ```
-$ kubectl describe pod deploy-example-<safe-pod-template-hash-<random>
+$ kubectl describe pod deploy-example-<pod-template-hash-<random>
 ```
 Look at the `Controlled By` field. It will contain a reference to the parent ReplicaSet, but not the parent Deployment.
 
@@ -258,7 +256,7 @@ $ kubectl get rs --show-labels
 ```
 There will now be two ReplicaSets, with the previous version of the Deployment being scaled down to 0.
 
-10) Now, scale the deployment up as you would a ReplicaSet, and set the `replicas=5`.
+10) Now, scale the Deployment up as you would a ReplicaSet, and set the `replicas=5`.
 ```
 $ kubectl scale deploy deploy-example --replicas=5
 ```
@@ -273,17 +271,17 @@ Note that there is **NO** new ReplicaSet generated. Scaling actions do **NOT** t
 fields. It should present a clear picture of relationship between objects during an update of a Deployment.
 ```
 $ kubectl describe deploy deploy-example
-$ kubectl describe rs deploy-example-<safe-pod-template-hash>
-$ kubectl describe pod deploy-example-<safe-pod-template-hash-<random>
+$ kubectl describe rs deploy-example-<pod-template-hash>
+$ kubectl describe pod deploy-example-<pod-template-hash-<random>
 ```
 
 ---
 
 **Summary:** Deployments are the main method of managing applications deployed within Kubernetes. They create and
 supervise targeted ReplicaSets by generating a unique hash called the `pod-template-hash` and attaching it to child
-objects as a Label and automatically include it in their Selector. This method of managing rollouts along with being
-able to define the methods and tolerances in the update strategy permits for a safe and seamless way of updating an
-application in place.
+objects as a Label along with automatically including it in their Selector. This method of managing rollouts along with
+being able to define the methods and tolerances in the update strategy permits for a safe and seamless way of updating
+an application in place.
 
 ---
 
@@ -302,7 +300,7 @@ $ kubectl rollout history deployment deploy-example
 There should be two revisions. One for when the Deployment was first created, and another when the additional Labels
 were added. The number of revisions saved is based off of the `revisionHistoryLimit` attribute in the Deployment spec.
 
-2) Look at the details of a specific revision by passing the `--revision=<reivision number>` flag.
+2) Look at the details of a specific revision by passing the `--revision=<revision number>` flag.
 ```
 $ kubectl rollout history deployment deploy-example --revision=1
 $ kubectl rollout history deployment deploy-example --revision=2
@@ -321,7 +319,7 @@ $ kubectl get pods --show-labels --watch
 ```
 They will cycle through rolling back to the previous revision.
 
-5) Describe the deployment `deploy-example`.
+5) Describe the Deployment `deploy-example`.
 ```
 $ kubectl describe deployment deploy-example
 ```
@@ -419,7 +417,7 @@ $ kubectl get pods --show-labels
 Note that the deployed Pod has a `controller-revision-hash` label. This is used like the `pod-template-hash` in a
 Deployment to track and allow for rollback functionality.
 
-6) Describing the DaemonSet will provide you with status information regarding it's deployment cluster wide.
+6) Describing the DaemonSet will provide you with status information regarding it's Deployment cluster wide.
 ```
 $ kubectl describe ds ds-example
 ```
@@ -490,7 +488,7 @@ They will cycle through rolling back to the previous revision.
 ```
 $ kubectl describe ds ds-example
 ```
-The events will be sparse with a single host, however in an actual deployment they will describe the status of
+The events will be sparse with a single host, however in an actual Deployment they will describe the status of
 updating the DaemonSet cluster wide, cycling through hosts one-by-one.
 
 ---
@@ -575,7 +573,7 @@ spec:
 $ kubectl create -f manifests/sts-example.yaml
 ```
 
-2) Immediately watch the pods being created.
+2) Immediately watch the Pods being created.
 ```
 $ kubectl get pods --show-labels --watch
 ```
@@ -748,7 +746,7 @@ $ kubectl delete pvc www-sts-example-0 www-sts-example-1 www-sts-example-2
 ---
 
 # Jobs and CronJobs
-The job controller ensures one or more pods are executed and successfully terminate. Essentially a task executor
+The Job Controller ensures one or more Pods are executed and successfully terminate. Essentially a task executor
 that can be run in parallel.
 
 CronJobs are an extension of the Job Controller, and enable Jobs to be run on a schedule.
@@ -794,12 +792,12 @@ $ kubectl get pods --show-labels --watch
 ```
 Only two Pods are being provisioned at a time; adhering to the `parallelism` attribute. This is done until the total
 number of `completions` is satisfied. Additionally, the Pods are labeled with `controller-uid`, this acts as a
-unique ID for that specific job. 
+unique ID for that specific Job. 
 
-When done, the Pods persist in a `Completed` state. They are not deleted after the job is completed or failed. 
+When done, the Pods persist in a `Completed` state. They are not deleted after the Job is completed or failed. 
 This is intentional to better support troubleshooting.
 
-3) A summary of these events can be seen by describing the job itself.
+3) A summary of these events can be seen by describing the Job itself.
 ```
 $ kubectl describe job job-example
 ```
@@ -813,7 +811,7 @@ $ kubectl delete job job-example
 ```
 $ kubectl get pods
 ```
-The Pods will now be deleted. They are cleaned up when the job itself is removed.
+The Pods will now be deleted. They are cleaned up when the Job itself is removed.
 
 ---
 
@@ -823,13 +821,13 @@ They _"run to completion"_ or terminate gracefully adhering to the `completions`
 ---
 
 ### Exercise: Scheduling a CronJob
-**Objective:** Create a CronJob based off a Job Template. Understand how the jobs are generated and how to suspend
+**Objective:** Create a CronJob based off a Job Template. Understand how the Jobs are generated and how to suspend
 a job in the event of a problem.
 
 ---
 
 1) Create CronJob `cronjob-example` based off the yaml below, or use the manifest `manifests/cronjob-example.yaml`
-It is configured to run the job from the earlier example every minute, using the cron schedule `"*/1 * * * *"`.
+It is configured to run the Job from the earlier example every minute, using the cron schedule `"*/1 * * * *"`.
 This schedule is **UTC ONLY**.
 
 **manifests/cronjob-example.yaml**
@@ -861,40 +859,40 @@ spec:
 $ kubectl create -f manifests/cronjob-example.yaml
 ```
 
-2) Give it some time to run, and then list the jobs.
+2) Give it some time to run, and then list the Jobs.
 ```
 $ kubectl get jobs
 ```
-There should be at least one job named in the format `<cronjob-name>-<unix time stamp>`. Note the timestamp of
-the oldest job.
+There should be at least one Job named in the format `<cronjob-name>-<unix time stamp>`. Note the timestamp of
+the oldest Job.
 
-3) Give it a few minutes and list the jobs once again
+3) Give it a few minutes and list the Jobs once again
 ```
 $ kubectl get jobs
 ```
-The oldest job should have been removed. The CronJob controller will purge jobs according to the
+The oldest Job should have been removed. The CronJob controller will purge Jobs according to the
 `successfulJobHistoryLimit` and `failedJobHistoryLimit` attributes. In this case, it is retaining strictly the
-last 3 successful jobs.
+last 3 successful Jobs.
 
 4) Describe the CronJob `cronjob-example` 
 ```
-$ kubectl describe cronjob cronjob-example
+$ kubectl describe CronJob cronjob-example
 ```
-The events will show the records of the creation and deletion of the jobs.
+The events will show the records of the creation and deletion of the Jobs.
 
 5) Edit the CronJob `cronjob-example` and locate the `Suspend` field. Then set it to true.
 ```
-$ kubectl edit cronjob cronjob-example
+$ kubectl edit CronJob cronjob-example
 ```
 This will prevent the cronjob from firing off any future events, and is useful to do to initially troubleshoot
 an issue without having to delete the CronJob directly.
 
 
-5) Delete the cronjob
+5) Delete the CronJob
 ```
 $ kubectl delete cronjob cronjob-example
 ```
-Deleting the CronJob **WILL** delete all child jobs. Use `Suspend` to _'stop'_ the job temporarily if attempting
+Deleting the CronJob **WILL** delete all child Jobs. Use `Suspend` to _'stop'_ the Job temporarily if attempting
 to troubleshoot.
 
 ---
@@ -906,7 +904,7 @@ only caveat being they adhere to a **UTC ONLY** schedule.
 
 **Clean Up Commands**
 ```
-$ kubectl delete cronjob cronjob-example
+$ kubectl delete CronJob cronjob-example
 ```
 
 ---

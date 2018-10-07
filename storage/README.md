@@ -117,11 +117,11 @@ You should see the same file.
 $ kubectl exec volume-example -c nginx -- /bin/sh -c "echo nginx >> /usr/share/nginx/html/index.html"
 ```
 It should error out and complain about the file being read only. The `nginx` container has no reason to write to the
-file, and mounts the same volume as read-only. Writing to the file is handled by the `content` container.
+file, and mounts the same Volume as read-only. Writing to the file is handled by the `content` container.
 
 ---
 
-**Summary:** Pods may have multiple volumes using different volume types. Those volumes in turn can be mounted to one
+**Summary:** Pods may have multiple volumes using different Volume types. Those volumes in turn can be mounted to one
 or more containers within the Pod by adding them to the `volumeMounts` list. This is done by referencing their name and
 supplying their `mountPath`. Additionally, volumes may be mounted both read-write or read-only depending on the
 application, enabling a variety of use-cases.
@@ -229,7 +229,7 @@ Note that the selector targets `type=hostpath`.
 $ kubectl describe pvc pvc-selector-example
 ```
 The pvc `pvc-selector-example` should be in a `Pending` state with the Error Event `FailedBinding` and
-`no persistent volumes available for this claim and no storage class is set`. If a PV is given a `storageClassName`,
+`no Persistent Volumes available for this claim and no storage class is set`. If a PV is given a `storageClassName`,
 **ONLY** PVCs that request that Storage Class may use it, even if the selector has a valid target.
 
 5) Now create the PV `pv-selector-example` from the manifest `manifests/pv-selector-example.yaml` or the yaml below.
@@ -292,7 +292,7 @@ Note that this PVC has a `storageClassName` reference and no selector.
 ```
 $ kubectl get pvc
 ```
-The `pvc-sc-example` should be bound to the `pv-sc-example` volume. It consumed the PV with the corresponding
+The `pvc-sc-example` should be bound to the `pv-sc-example` Volume. It consumed the PV with the corresponding
 `storageClassName`.
 
 9) Delete both PVCs.
@@ -310,7 +310,7 @@ of `Delete` meaning that as soon as the PVC was deleted, the PV itself was delet
 PV `pv-selector-example`, was created without specifying a `persistentVolumeReclaimPolicy` and was in turn created
 with the default for PVs: `Retain`. It's state of `Released` means that it's associated PVC has been deleted.
 In this state no other PVC's may claim it, even if `pvc-selector-example` was created again. The PV must **manually**
-be reclaimed or deleted. This ensures the preservation of the state of the volume in the event that its PVC was
+be reclaimed or deleted. This ensures the preservation of the state of the Volume in the event that its PVC was
 accidentally deleted giving an administrator time to do something with the data before reclaiming it.
 
 11) Delete the PV `pv-selector-example`.
@@ -378,7 +378,7 @@ $ kubectl create -f manifests/html-vol.yaml
 
 2) Create Deployment `writer` from the manifest `manifests/writer.yaml` or use the yaml below. It is similar to the
 [`volume-example` Pod from the first exercise](#exercise-using-volumes-with-pods), but now uses a
-`persistentVolumeClaim` volume instead of an `emptyDir`.
+`persistentVolumeClaim` Volume instead of an `emptyDir`.
 
 **manifests/writer.yaml**
 ```yaml
@@ -489,13 +489,13 @@ created with the access mode `ReadWriteMany`.
 ```
 $ kubectl exec reader-<pod-hash>-<pod-id> -- /bin/sh -c "echo nginx >> /usr/share/nginx/html/index.html"
 ```
-The `reader` Pods have mounted the volume as read only. Just as it did with exercise 1, The command should error out
+The `reader` Pods have mounted the Volume as read only. Just as it did with exercise 1, The command should error out
 with a message complaining about not being able to modify a read-only filesystem.
 
 ---
 
 **Summary:** Using Persistent Volume Claims with Pods is quite easy. The attribute `persistentVolumeClaim.claimName`
-simply must reference the name of the desired PVC in the Pod's volume definition. Multiple Pods may reference the same
+simply must reference the name of the desired PVC in the Pod's Volume definition. Multiple Pods may reference the same
 PVC as long as their access mode supports it.
 
 ---
@@ -539,7 +539,7 @@ $ kubectl describe sc standard
 ```
 Note the fields `IsDefaultClass`, `Provisioner`, and `ReclaimPolicy`. The `Provisioner` attribute references the
 _"driver"_ for the Storage Class. Minikube comes with it's own driver `k8s.io/minikube-hostpath` that simply mounts
-a hostpath from within the VM as a volume.
+a hostpath from within the VM as a Volume.
 
 3) Create PVC `pvc-standard` from the manifest `manifests/pvc-standard.yaml` or use the yaml below.
 
@@ -568,7 +568,7 @@ $ kubectl create -f manifests/pvc-standard.yaml
 $ kubectl describe pvc pvc-standard
 ```
 The `Events` lists the actions that occurred when the PVC was created. The external provisioner `standard` provisions
-a volume for the claim `default/pvc-standard` and is assigned the name `pvc-<pvc-standard uid>`.
+a Volume for the claim `default/pvc-standard` and is assigned the name `pvc-<pvc-standard uid>`.
 
 5) List the PVs.
 ```
