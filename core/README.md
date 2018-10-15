@@ -440,7 +440,7 @@ $ kubectl create -f manifests/metalLB.yaml
 apiVersion: v1
 kind: Service
 metadata:
-  name: nginx
+  name: loadbalancer
 spec:
   type: LoadBalancer
   selector:
