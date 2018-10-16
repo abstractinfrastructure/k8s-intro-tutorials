@@ -110,6 +110,25 @@ $ kubectl get pods --show-labels --watch
 
 7) Once `rs-example` is back down to 3 Pods. Create an independent Pod manually with the same labels as the one
 targeted by `rs-example` from the manifest `manifests/pod-rs-example.yaml`.
+
+**manifests/pod-rs-example.yaml**
+```yaml
+apiVersion: v1
+kind: Pod
+metadata:
+  name: pod-example
+  labels:
+    app: nginx
+    env: prod
+spec:
+  containers:
+  - name: nginx
+    image: nginx:stable-alpine
+    ports:
+    - containerPort: 80
+```
+
+**Command**
 ```
 $ kubectl create -f manifests/pod-rs-example.yaml
 ```
@@ -360,8 +379,8 @@ how they are scheduled and how an update occurs.
 
 ---
 
-1) Create DaemonSet `ds-example`. Use the example yaml block below as a base, or use the manifest
-`manifests/ds-example.yaml` directly.
+1) Create DaemonSet `ds-example` and pass the `--record` flag. Use the example yaml block below as a base, or use
+the manifest `manifests/ds-example.yaml` directly.
 
 **manifests/ds-example.yaml**
 ```yaml
@@ -390,7 +409,7 @@ spec:
 
 **Command**
 ```
-$ kubectl create -f manifests/ds-example.yaml
+$ kubectl create -f manifests/ds-example.yaml --record
 ```
 
 2) View the current DaemonSets.
