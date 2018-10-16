@@ -166,7 +166,7 @@ the multiple ways they may be selected.
 that its labeled with `type=hostpath`, its Storage Class Name is set to `mypvsc`, and uses `Delete` for the Reclaim
 Policy.
 
-**manifests/pv-example.yaml**
+**manifests/pv-sc-example.yaml**
 ```yaml
 kind: PersistentVolume
 apiVersion: v1
@@ -582,6 +582,7 @@ below.
 **manifests/pvc-selector-example.yaml**
 ```yaml
 apiVersion: v1
+kind: PersistentVolumeClaim
 metadata:
   name: pvc-selector-example
 spec:
