@@ -526,10 +526,10 @@ internal Service discovery methods to reference external entities.
 
 To remove everything that was created in this tutorial, execute the following commands:
 ```
-$ kubectl delete namespace dev
-$ kubectl delete -f manifests/metalLB.yaml
-$ kubectl config delete-context minidev
-$ kubectl config use-context minikube
+kubectl delete namespace dev
+kubectl delete -f manifests/metalLB.yaml
+kubectl config delete-context minidev
+kubectl config use-context minikube
 ```
 
 ---

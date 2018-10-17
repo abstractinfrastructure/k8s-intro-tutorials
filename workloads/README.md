@@ -157,7 +157,7 @@ new Pods based off the Pod Template till the desired number of Replicas are pres
 
 **Clean Up Command**
 ```
-$ kubectl delete rs rs-example
+kubectl delete rs rs-example
 ```
 
 ---
@@ -354,7 +354,7 @@ be left out.
 
 **Clean Up Command**
 ```
-$ kubectl delete deploy deploy-example
+kubectl delete deploy deploy-example
 ```
 
 ---
@@ -520,7 +520,7 @@ services such as Pod Networking.
 
 **Clean Up Command**
 ```
-$ kubectl delete ds ds-example
+kubectl delete ds ds-example
 ```
 
 ---
@@ -752,9 +752,9 @@ and can be used consistently throughout other Workloads.
 
 **Clean Up Command**
 ```
-$ kubectl delete svc app
-$ kubectl delete statefulset sts-example
-$ kubectl delete pvc www-sts-example-0 www-sts-example-1 www-sts-example-2
+kubectl delete svc app
+kubectl delete statefulset sts-example
+kubectl delete pvc www-sts-example-0 www-sts-example-1 www-sts-example-2
 ```
 
 ---
@@ -923,7 +923,7 @@ only caveat being they adhere to a **UTC ONLY** schedule.
 
 **Clean Up Commands**
 ```
-$ kubectl delete CronJob cronjob-example
+kubectl delete CronJob cronjob-example
 ```
 
 ---
