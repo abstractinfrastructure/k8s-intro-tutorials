@@ -440,7 +440,7 @@ $ kubectl create -f manifests/metalLB.yaml
 apiVersion: v1
 kind: Service
 metadata:
-  name: nginx
+  name: loadbalancer
 spec:
   type: LoadBalancer
   selector:
@@ -469,7 +469,7 @@ Service.
 4) Use the `minikube service` command to open the `NodePort` portion of the `loadbalancer` Service in a new browser
 window.
 ```
-$ minikube service -n dev nginx
+$ minikube service -n dev loadbalancer
 ```
 
 5) Finally, verify that the generated DNS record has been created for the Service by using nslookup within the
