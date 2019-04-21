@@ -627,8 +627,8 @@ The namespace and context will be reused.
 
 To remove everything that was created in this tutorial, execute the following commands:
 ```
-$ kubectl delete namespace dev
-$ kubectl config delete-context minidev
+kubectl delete namespace dev
+kubectl config delete-context minidev
 ```
 
 ---

@@ -216,7 +216,7 @@ Both methods are commonly used and enable a wide-variety of use-cases.
 
 **Clean Up Command:**
 ```
-$ kubectl delete job cm-env-example cm-cmd-example
+kubectl delete job cm-env-example cm-cmd-example
 ```
 
 ---
@@ -309,8 +309,8 @@ avenue to further decouple application from configuration.
 
 **Clean Up Command:**
 ```
-$ kubectl delete pod cm-vol-example
-$ kubectl delete cm dir-example file-example literal-example manifest-example
+kubectl delete pod cm-vol-example
+kubectl delete cm dir-example file-example literal-example manifest-example
 ```
 
 ---
@@ -527,7 +527,7 @@ Both methods are useful in a wide-variety of scenarios enabling further decoupli
 
 **Clean Up Command:**
 ```
-$ kubectl delete job secret-env-example secret-cmd-example
+kubectl delete job secret-env-example secret-cmd-example
 ```
 
 ---
@@ -619,8 +619,8 @@ items stored in a Secret. These items can be renamed or be made read-only to mee
 
 **Clean Up Command:**
 ```
-$ kubectl delete pod secret-vol-example
-$ kubectl delete secret dir-example file-example literal-example manifest-example
+kubectl delete pod secret-vol-example
+kubectl delete secret dir-example file-example literal-example manifest-example
 ```
 
 ---
@@ -633,8 +633,8 @@ $ kubectl delete secret dir-example file-example literal-example manifest-exampl
 # Cleaning Up
 
 ```
-$ kubectl delete cm manifest-example literal-example dir-example file-example
-$ kubectl delete secret manifest-example literal-example dir-example file-example
+kubectl delete cm manifest-example literal-example dir-example file-example
+kubectl delete secret manifest-example literal-example dir-example file-example
 ```
 
 ---

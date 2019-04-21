@@ -103,12 +103,12 @@ spec:
 $ kubectl create -f manifests/pod-example.yaml
 ```
 
-3) Use `kubectl` to describe the Pod and note the available information.
+2) Use `kubectl` to describe the Pod and note the available information.
 ```
 $ kubectl describe pod pod-example
 ```
 
-4) Use `kubectl proxy` to verify the web server running in the deployed Pod.
+3) Use `kubectl proxy` to verify the web server running in the deployed Pod.
 
 **Command**
 ```
@@ -121,7 +121,7 @@ http://127.0.0.1:8001/api/v1/namespaces/dev/pods/pod-example/proxy/
 
 The default **"Welcome to nginx!"** page should be visible.
 
-5) Using the same steps as above, create a new Pod called `multi-container-example` using the manifest
+4) Using the same steps as above, create a new Pod called `multi-container-example` using the manifest
 `manifests/pod-multi-container-example.yaml` or create a new one yourself with the below yaml.
 
 **manifests/pod-multi-container-example.yaml**
@@ -134,6 +134,8 @@ spec:
   containers:
   - name: nginx
     image: nginx:stable-alpine
+    ports:
+    - containerPort: 80
     volumeMounts:
     - name: html
       mountPath: /usr/share/nginx/html
@@ -159,7 +161,7 @@ $ kubectl create -f manifests/pod-multi-container-example.yaml
 ```
 **Note:** `spec.containers` is an array allowing you to use multiple containers within a Pod.
 
-6) Use the proxy to verify the web server running in the deployed Pod.
+5) Use the proxy to verify the web server running in the deployed Pod.
 
 **Command**
 ```
@@ -226,6 +228,8 @@ spec:
   containers:
   - name: nginx
     image: nginx:stable-alpine
+    ports:
+    - containerPort: 80
     volumeMounts:
     - name: html
       mountPath: /usr/share/nginx/html
@@ -526,10 +530,10 @@ internal Service discovery methods to reference external entities.
 
 To remove everything that was created in this tutorial, execute the following commands:
 ```
-$ kubectl delete namespace dev
-$ kubectl delete -f manifests/metalLB.yaml
-$ kubectl config delete-context minidev
-$ kubectl config use-context minikube
+kubectl delete namespace dev
+kubectl delete -f manifests/metalLB.yaml
+kubectl config delete-context minidev
+kubectl config use-context minikube
 ```
 
 ---

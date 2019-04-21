@@ -37,9 +37,23 @@ $ minikube addons disable default-storageclass
 $ kubectl delete sc standard
 ```
 
+**Attention Windows Users:** There is a  [known issue with minikube and enabling/disabling
+addons](https://github.com/kubernetes/minikube/issues/2281). If you encounter an error with the above command, execute
+the following:
+```
+$ minikube ssh 'sudo mv /etc/kubernetes/manifests/addon-manager.yaml /etc/kubernetes/addon-manager.yaml'
+$ kubectl delete pod storage-provisioner -n kube-system
+$ kubectl delete sc standard
+```
+
+
 When done, re-enabling the default-storageclass will automatically turn it back on.
 ```
 $ minikube addons enable default-storageclass
+```
+or if you had to perform the windows workaround, execute this:
+```
+$ minikube ssh 'sudo mv /etc/kubernetes/addon-manager.yaml /etc/kubernetes/manifests/addon-manager.yaml'
 ```
 
 ---
@@ -71,6 +85,8 @@ spec:
   containers:
   - name: nginx
     image: nginx:stable-alpine
+    ports:
+    - containerPort: 80
     volumeMounts:
     - name: html
       mountPath: /usr/share/nginx/html
@@ -130,7 +146,7 @@ application, enabling a variety of use-cases.
 
 **Clean Up Command**
 ```
-$ kubectl delete pod volume-example
+kubectl delete pod volume-example
 ```
 
 ---
@@ -502,7 +518,7 @@ PVC as long as their access mode supports it.
 
 **Clean Up Command**
 ```
-$ kubectl delete -f manifests/reader.yaml -f manifests/writer.yaml -f manifests/html-vol.yaml
+kubectl delete -f manifests/reader.yaml -f manifests/writer.yaml -f manifests/html-vol.yaml
 ```
 
 ---
@@ -531,6 +547,12 @@ via a Storage Class.
 $ minikube addons enable default-storageclass
 $ kubectl get sc --watch
 ```
+or if you had to perform the windows workaround, execute this:
+```
+$ minikube ssh 'sudo mv /etc/kubernetes/addon-manager.yaml /etc/kubernetes/manifests/addon-manager.yaml'
+$ kubectl get sc --watch
+```
+
 You should see Storage Class `standard` become available after a few moments.
 
 2) Describe the new Storage Class
