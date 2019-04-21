@@ -374,7 +374,7 @@ spec:
   type: NodePort
   selector:
     app: nginx
-    environment: dev
+    environment: prod
   ports:
   - nodePort: 32410
     protocol: TCP
