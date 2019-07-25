@@ -9,7 +9,7 @@ a variety of virtualization engines. To install it and the other tutorial depend
 
 Each section assumes an instance of minikube is up and running. To start minikube for the first time, use the command:
 ```
-minikube start --kubernetes-version v1.12.1
+minikube start --kubernetes-version v1.15.1
 ```
 
 To launch an alternative version of kubernetes within your minikube instance, supply an alternate version string:
@@ -17,7 +17,7 @@ To launch an alternative version of kubernetes within your minikube instance, su
 minikube start --kubernetes-version <version string>
 ```
 
-Tutorials have been validated against minikube v0.30 running Kubernetes v1.12.x and kubectl 1.12.0
+Tutorials have been validated against minikube v1.2.0 running Kubernetes v1.15.1 and kubectl 1.15.1
 
 ---
 
@@ -123,7 +123,7 @@ Once done, [verify your Install](#verifying-install).
 
 With the software installed you can verify it is working correctly by executing:
 ```
-minikube start --kubernetes-version v1.12.1
+minikube start --kubernetes-version v1.15.1
 ```
 
 This will take a little bit of time the first time it is run as it will download its needed dependencies and starts the
@@ -134,11 +134,11 @@ kubectl version
 
 You should get output similar to the following:
 ```
-Client Version: version.Info{Major:"1", Minor:"12", GitVersion:"v1.12.0", GitCommit:"0ed33881dc4355495f623c6f22e7dd0b7632b7c0", GitTreeState:"clean", BuildDate:"2018-09-28T15:20:58Z", GoVersion:"go1.11", Compiler:"gc", Platform:"darwin/amd64"}
-Server Version: version.Info{Major:"1", Minor:"12", GitVersion:"v1.12.1", GitCommit:"4ed3216f3ec431b140b1d899130a69fc671678f4", GitTreeState:"clean", BuildDate:"2018-10-05T16:36:14Z", GoVersion:"go1.10.4", Compiler:"gc", Platform:"linux/amd64"}
+Client Version: version.Info{Major:"1", Minor:"15", GitVersion:"v1.15.1", GitCommit:"4485c6f18cee9a5d3c3b4e523bd27972b1b53892", GitTreeState:"clean", BuildDate:"2019-07-18T14:25:20Z", GoVersion:"go1.12.7", Compiler:"gc", Platform:"darwin/amd64"}
+Server Version: version.Info{Major:"1", Minor:"15", GitVersion:"v1.15.1", GitCommit:"4485c6f18cee9a5d3c3b4e523bd27972b1b53892", GitTreeState:"clean", BuildDate:"2019-07-18T09:09:21Z", GoVersion:"go1.12.5", Compiler:"gc", Platform:"linux/amd64"}
 ```
 
-After that you may stop the virtualmachine with:
+After that you may stop the virtual machine with:
 ```
 minikube stop
 ```
@@ -176,14 +176,14 @@ This can be caused by a variety of issues. However the solution is the same.
 First try deleting and recreating the minikube instance
 ```
 minikube delete
-minikube start --kubernetes-version v1.12.1
+minikube start --kubernetes-version v1.15.1
 ```
 
 If that does not resolve the issue, delete the local minikube configs and try starting it again
 ```
 minikube delete
 rm -rf ~/.minikube
-minikube start --kubernetes-version v1.12.1
+minikube start --kubernetes-version v1.15.1
 ```
 That should hopefully resolve the kubeadm init error.
 
