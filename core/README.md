@@ -35,23 +35,23 @@ access.
 
 1) List the current namespaces
 ```
-$ kubectl get namespaces
+kubectl get namespaces
 ```
 
 2) Create the `dev` namespace
 ```
-$ kubectl create namespace dev
+kubectl create namespace dev
 ```
 
 3) Create a new context called `minidev` within the `minikube` cluster  as the `minikube` user, with the namespace
  set to `dev`.
 ```
-$ kubectl config set-context minidev --cluster=minikube --user=minikube --namespace=dev
+kubectl config set-context minidev --cluster=minikube --user=minikube --namespace=dev
 ```
 
 4) Switch to the newly created context.
 ```
-$ kubectl config use-context minidev
+kubectl config use-context minidev
 ```
 
 ---
@@ -81,7 +81,7 @@ their exposed Services through the API Server proxy.
 
 ---
 
-1) Create a simple Pod called `pod-example` using the `nginx:stable-alpine` image and expose port `80`. Use the
+1) Create a simple Pod called `pod-example` using the `twalter/openshift-nginx` image and expose port `8081`. Use the
 manifest `manifests/pod-example.yaml` or the yaml below.
 
 **manifests/pod-example.yaml**
@@ -93,26 +93,26 @@ metadata:
 spec:
   containers:
   - name: nginx
-    image: nginx:stable-alpine
+    image: twalter/openshift-nginx
     ports:
-    - containerPort: 80
+    - containerPort: 8081
 ```
 
 **Command**
 ```
-$ kubectl create -f manifests/pod-example.yaml
+kubectl create -f manifests/pod-example.yaml
 ```
 
 2) Use `kubectl` to describe the Pod and note the available information.
 ```
-$ kubectl describe pod pod-example
+kubectl describe pod pod-example
 ```
 
 3) Use `kubectl proxy` to verify the web server running in the deployed Pod.
 
 **Command**
 ```
-$ kubectl proxy
+kubectl proxy
 ```
 **URL**
 ```
@@ -133,9 +133,9 @@ metadata:
 spec:
   containers:
   - name: nginx
-    image: nginx:stable-alpine
+    image: twalter/openshift-nginx
     ports:
-    - containerPort: 80
+    - containerPort: 8081
     volumeMounts:
     - name: html
       mountPath: /usr/share/nginx/html
@@ -157,7 +157,7 @@ spec:
 
 **Command**
 ```
-$ kubectl create -f manifests/pod-multi-container-example.yaml
+kubectl create -f manifests/pod-multi-container-example.yaml
 ```
 **Note:** `spec.containers` is an array allowing you to use multiple containers within a Pod.
 
@@ -165,7 +165,7 @@ $ kubectl create -f manifests/pod-multi-container-example.yaml
 
 **Command**
 ```
-$ kubectl proxy
+kubectl proxy
 ```
 **URL**
 ```
@@ -204,12 +204,12 @@ set-based selectors.
 1) Label the Pod `pod-example` with `app=nginx` and `environment=dev` via `kubectl`.
 
 ```
-$ kubectl label pod pod-example app=nginx environment=dev
+kubectl label pod pod-example app=nginx environment=dev
 ```
 
 2) View the labels with `kubectl` by passing the `--show-labels` flag
 ```
-$ kubectl get pods --show-labels
+kubectl get pods --show-labels
 ```
 
 3) Update the multi-container example manifest created previously with the labels `app=nginx` and `environment=prod`
@@ -227,9 +227,9 @@ metadata:
 spec:
   containers:
   - name: nginx
-    image: nginx:stable-alpine
+    image: twalter/openshift-nginx
     ports:
-    - containerPort: 80
+    - containerPort: 8081
     volumeMounts:
     - name: html
       mountPath: /usr/share/nginx/html
@@ -251,31 +251,31 @@ spec:
 
 **Command**
 ```
-$ kubectl apply -f manifests/pod-multi-container-example.yaml
+kubectl apply -f manifests/pod-multi-container-example.yaml
 ```
 
 4) View the added labels with `kubectl` by passing the `--show-labels` flag once again.
 ```
-$ kubectl get pods --show-labels
+kubectl get pods --show-labels
 ```
 
 5) With the objects now labeled, use an [equality based selector](https://kubernetes.io/docs/concepts/overview/working-with-objects/labels/#equality-based-requirement) 
 targeting the `prod` environment.
 
 ```
-$ kubectl get pods --selector environment=prod
+kubectl get pods --selector environment=prod
 ```
 
 6) Do the same targeting the `nginx` app with the short version of the selector flag (`-l`).
 ```
-$ kubectl get pods -l app=nginx
+kubectl get pods -l app=nginx
 ```
 
 7) Use a [set-based selector](https://kubernetes.io/docs/concepts/overview/working-with-objects/labels/#set-based-requirement)
 to view all pods where the `app` label is `nginx` and filter out any that are in the `prod` environment.
 
 ```
-$ kubectl get pods -l 'app in (nginx), environment notin (prod)'
+kubectl get pods -l 'app in (nginx), environment notin (prod)'
 ```
 
 ---
@@ -304,7 +304,7 @@ resource (unlike Pods) that is given a static cluster-unique IP and provide simp
 
 ---
 
-1) Create `ClusterIP` service `clusterip` that targets Pods labeled with `app=nginx` forwarding port `80` using
+1) Create `ClusterIP` service `clusterip` that targets Pods labeled with `app=nginx` forwarding port `8081` using
 either the yaml below, or the manifest `manifests/service-clusterip.yaml`.
 
 **manifests/service-clusterip.yaml**
@@ -318,25 +318,25 @@ spec:
     app: nginx
   ports:
   - protocol: TCP
-    port: 80
-    targetPort: 80
+    port: 8081
+    targetPort: 8081
 ```
 
 **Command**
 ```
-$ kubectl create -f manifests/service-clusterip.yaml
+kubectl create -f manifests/service-clusterip.yaml
 ```
 
 2) Describe the newly created service. Note the `IP` and the `Endpoints` fields.
 ```
-$ kubectl describe service clusterip
+kubectl describe service clusterip
 ```
 
 3) View the service through `kube proxy` and refresh several times. It should serve up pages from both pods.
 
 **Command**
 ```
-$ kubectl proxy
+kubectl proxy
 ```
 **URL**
 ```
@@ -346,7 +346,7 @@ http://127.0.0.1:8001/api/v1/namespaces/dev/services/clusterip/proxy/
 4) Lastly, verify that the generated DNS record has been created for the Service by using nslookup within the
 `example-pod` Pod that was provisioned in the [Creating Pods](#exercise-creating-pods) exercise.
 ```
-$ kubectl exec pod-example -- nslookup clusterip.dev.svc.cluster.local
+kubectl exec pod-example -- nslookup clusterip.dev.svc.cluster.local
 ```
 It should return a valid response with the IP matching what was noted earlier when describing the Service.
 
@@ -365,7 +365,7 @@ which exposed Pod Services are consumed **within** a Kubernetes Cluster.
 ---
 
 1) Create a `NodePort` Service called `nodeport` that targets Pods with the labels `app=nginx` and `environment=dev`
-forwarding port `80` in cluster, and port `32410` on the node itself. Use either the yaml below, or the manifest
+forwarding port `8081` in cluster, and a random port on the node itself. Use either the yaml below, or the manifest
 `manifests/service-nodeport.yaml`.
 
 **manifests/service-nodeport.yaml**
@@ -380,21 +380,20 @@ spec:
     app: nginx
     environment: prod
   ports:
-  - nodePort: 32410
-    protocol: TCP
-    port: 80
-    targetPort: 80
+  - protocol: TCP
+    port: 8081
+    targetPort: 8081
 ```
 
 **Command**
 ```
-$ kubectl create -f manifests/service-nodeport.yaml
+kubectl create -f manifests/service-nodeport.yaml
 ```
 
 2) Describe the newly created Service Endpoint. Note the Service still has an internal cluster `IP`, and now
 additionally has a `NodePort`.
 ```
-$ kubectl describe service nodeport
+kubectl describe service nodeport
 ```
 
 3) Use the `minikube service` command to open the newly exposed `nodeport` Service in a browser.
@@ -405,14 +404,14 @@ $ minikube service -n dev nodeport
 4) Lastly, verify that the generated DNS record has been created for the Service by using nslookup within
 the `example-pod` Pod.
 ```
-$ kubectl exec pod-example -- nslookup nodeport.dev.svc.cluster.local
+kubectl exec pod-example -- nslookup nodeport.dev.svc.cluster.local
 ```
 It should return a valid response with the IP matching what was noted earlier when describing the Service.
 
 ---
 
 **Summary:** The `NodePort` Services extend the `ClusterIP` Service and additionally expose a port that is either
-statically defined, as above (port 32410) or dynamically taken from a range between 30000-32767. This port is then
+statically defined, or dynamically taken from a range between 30000-32767. This port is then
 exposed on every node within the cluster and proxies to the created Service.
 
 ---
@@ -432,11 +431,11 @@ that can do this, but for this example the Google [metalLB](https://github.com/g
 IP range. Edit the manifest `manifests/metalLB.yaml` and change the cidr range on line 20 (`192.168.99.224/28`) to
 fit your requirements. Otherwise go ahead and deploy it.
 ```
-$ kubectl create -f manifests/metalLB.yaml
+kubectl create -f manifests/metalLB.yaml
 ```
 
 1) Create a `LoadBalancer` Service called `loadbalancer` that targets pods with the labels `app=nginx` and
-`environment=prod` forwarding as port `80`. Use either the yaml below, or the manifest
+`environment=prod` forwarding as port `8081`. Use either the yaml below, or the manifest
 `manifests/service--loadbalancer.yaml`.
 
 **manifests/service-loadbalancer.yaml**
@@ -452,19 +451,19 @@ spec:
     environment: prod
   ports:
   - protocol: TCP
-    port: 80
-    targetPort: 80
+    port: 8081
+    targetPort: 8081
 ```
 
 **Command**
 ```
-$ kubectl create -f manifests/service-loadbalancer.yaml
+kubectl create -f manifests/service-loadbalancer.yaml
 ```
 
 2) Describe the Service `loadbalancer`, and note the Service retains the aspects of both the `ClusterIP` and
 `NodePort` Service types in addition to having a new attribute `LoadBalancer Ingress`.
 ```
-$ kubectl describe service loadbalancer
+kubectl describe service loadbalancer
 ```
 
 3) Open a browser and visit the IP noted in the `Loadbalancer Ingress` field. It should directly map to the exposed
@@ -479,7 +478,7 @@ $ minikube service -n dev loadbalancer
 5) Finally, verify that the generated DNS record has been created for the Service by using nslookup within the
 `example-pod` Pod.
 ```
-$ kubectl exec pod-example -- nslookup loadbalancer.dev.svc.cluster.local
+kubectl exec pod-example -- nslookup loadbalancer.dev.svc.cluster.local
 ```
 It should return a valid response with the IP matching what was noted earlier when describing the Service.
 
@@ -499,19 +498,19 @@ turn direct traffic to the desired Pods.
 
 1) Create an `ExternalName` service called `externalname` that points to `google.com`
 ```
-$ kubectl create service externalname externalname --external-name=google.com
+kubectl create service externalname externalname --external-name=google.com
 ```
 
 2) Describe the `externalname` Service. Note that it does **NOT** have an internal IP or other _normal_ service
 attributes.
 ```
-$ kubectl describe service externalname
+kubectl describe service externalname
 ```
 
 3) Lastly, look at the generated DNS record has been created for the Service by using nslookup within the
 `example-pod` Pod. It should return the IP of `google.com`.
 ```
-$ kubectl exec pod-example -- nslookup externalname.dev.svc.cluster.local
+kubectl exec pod-example -- nslookup externalname.dev.svc.cluster.local
 ```
 
 ---

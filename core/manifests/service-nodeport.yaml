@@ -8,7 +8,6 @@ spec:
     app: nginx
     environment: prod
   ports:
-  - nodePort: 32410
-    protocol: TCP
-    port: 80
-    targetPort: 80
+  - protocol: TCP
+    port: 8081
+    targetPort: 8081

@@ -54,12 +54,12 @@ data:
 
 **Command**
 ```
-$ kubectl create -f manifests/cm-manifest.yaml
+kubectl create -f manifests/cm-manifest.yaml
 ```
 
 View the created ConfigMap.
 ```
-$ kubectl get configmap manifest-example -o yaml
+kubectl get configmap manifest-example -o yaml
 ```
 
 #### From Literal
@@ -67,36 +67,36 @@ $ kubectl get configmap manifest-example -o yaml
 Create ConfigMap `literal-example` using the `--from-literal` flag and `city=Ann Arbor` along with `state=Michigan`
 for the values.
 ```
-$ kubectl create cm literal-example --from-literal="city=Ann Arbor" --from-literal=state=Michigan
+kubectl create cm literal-example --from-literal="city=Ann Arbor" --from-literal=state=Michigan
 ```
 
 View the created ConfigMap.
 ```
-$ kubectl get cm literal-example -o yaml
+kubectl get cm literal-example -o yaml
 ```
 
 #### From Directory
 
 Create ConfigMap `dir-example` by using the `manifests/cm` directory as the source.
 ```
-$ kubectl create cm dir-example --from-file=manifests/cm/
+kubectl create cm dir-example --from-file=manifests/cm/
 ```
 
 View the created ConfigMap.
 ```
-$ kubectl get cm dir-example -o yaml
+kubectl get cm dir-example -o yaml
 ```
 
 #### From File
 
 Create ConfigMap `file-example` by using the `city` and `state` files in the `manifests/cm` directory.
 ```
-$ kubectl create cm file-example --from-file=manifests/cm/city --from-file=manifests/cm/state
+kubectl create cm file-example --from-file=manifests/cm/city --from-file=manifests/cm/state
 ```
 
 View the created ConfigMap.
 ```
-$ kubectl get cm file-example -o yaml
+kubectl get cm file-example -o yaml
 ```
 
 **Note:** When creating a ConfigMap from a file or directory the content will assume to be multiline as signified by 
@@ -146,7 +146,7 @@ spec:
 
 **Command**
 ```
-$ kubectl create -f manifests/cm-env-example.yaml
+kubectl create -f manifests/cm-env-example.yaml
 ```
 
 Note how the Environment Variable is injected using `valueFrom` and `configMapKeyRef`. This queries a specific key
@@ -154,12 +154,12 @@ from the ConfigMap and injects it as an Environment Variable.
 
 2) List the Pods.
 ```
-$ kubectl get pods
+kubectl get pods
 ```
 
 3) Copy the pod name and view the output of the Job.
 ```
-$ kubectl logs cm-env-example-<pod-id>
+kubectl logs cm-env-example-<pod-id>
 ```
 It should echo the value from the `manifest-example` ConfigMap `city` key-value pair.
 
@@ -192,17 +192,17 @@ spec:
 
 **Command**
 ```
-$ kubectl create -f manifests/cm-cmd-example.yaml
+kubectl create -f manifests/cm-cmd-example.yaml
 ```
 
 5) List the Pods.
 ```
-$ kubectl get pods
+kubectl get pods
 ```
 
 3) Copy the pod name of the `cm-cmd-example` job and view the output of the Pod.
 ```
-$ kubectl logs cm-cmd-example-<pod-id>
+kubectl logs cm-cmd-example-<pod-id>
 ```
 It should echo the string "Hello from <data[city]>" referencing the value from the `manifest-example` ConfigMap.
 
@@ -266,7 +266,7 @@ spec:
 
 **Command**
 ```
-$ kubectl create -f manifests/cm-vol-example.yaml
+kubectl create -f manifests/cm-vol-example.yaml
 ```
 
 Note the volumes and how they are being referenced. The volume `city`, has an array of `items` that contains a sub-set
@@ -275,26 +275,26 @@ possible to override the name or path to the generated file by supplying an argu
 
 2) View the contents of the `/myconfig` volume mount.
 ```
-$ kubectl exec cm-vol-example -- ls /myconfig
+kubectl exec cm-vol-example -- ls /myconfig
 ```
 It will contain two files, matching the names of the keys stored in configMap `manifest-example`.
 
 3) `cat` the contents of the files.
 ```
-$ kubectl exec cm-vol-example -- /bin/sh -c "cat /myconfig/*"
+kubectl exec cm-vol-example -- /bin/sh -c "cat /myconfig/*"
 ```
 It will match the values stored in the configMap `manifest-example` concatenated together.
 
 4) View the contents of the other Volume Mount `mycity`.
 ```
-$ kubectl exec cm-vol-example -- ls /mycity
+kubectl exec cm-vol-example -- ls /mycity
 ```
 A file will be present that represents the single item being referenced in the `city` volume. This file bears the
 name `thisismycity` as specified by the `path` variable.
 
 5) `cat` contents of the `thisismycity` file.
 ```
-$ kubectl exec cm-vol-example -- cat /mycity/thisismycity
+kubectl exec cm-vol-example -- cat /mycity/thisismycity
 ```
 The contents should match the value of data[city].
 
@@ -358,7 +358,7 @@ data:
 
 **Command**
 ```
-$ kubectl create -f manifests/secret-manifest.yaml
+kubectl create -f manifests/secret-manifest.yaml
 ```
 
 Note the Secret has the additional attribute `type` when compared to a ConfigMap. The `Opaque` value simply means the
@@ -367,7 +367,7 @@ data is unstructured. Additionally, the content referenced in `data` itself is b
 
 View the created Secret.
 ```
-$ kubectl get secret manifest-example -o yaml
+kubectl get secret manifest-example -o yaml
 ```
 
 #### From Literal
@@ -375,7 +375,7 @@ $ kubectl get secret manifest-example -o yaml
 Create Secret `literal-example` using the `--from-literal` flag and `username=example` along with `password=mypassword`
 for the values.
 ```
-$ kubectl create secret generic literal-example --from-literal=username=example --from-literal=password=mypassword
+kubectl create secret generic literal-example --from-literal=username=example --from-literal=password=mypassword
 ```
 **Note:** Unlike ConfigMaps you **must** also specify the type of Secret you are creating. There are 3 types:
 * docker-registry - Credentials used to interact with a container registry.
@@ -385,31 +385,31 @@ $ kubectl create secret generic literal-example --from-literal=username=example 
 
 View the created Secret.
 ```
-$ kubectl get secret literal-example -o yaml
+kubectl get secret literal-example -o yaml
 ```
 
 #### From Directory
 
 Create Secret `dir-example` by using the `manifests/secret` directory as the source.
 ```
-$ kubectl create secret generic dir-example --from-file=manifests/secret/
+kubectl create secret generic dir-example --from-file=manifests/secret/
 ```
 
 View the created Secret.
 ```
-$ kubectl get secret dir-example -o yaml
+kubectl get secret dir-example -o yaml
 ```
 
 #### From File
 
 Create ConfigMap `file-example` by using the `username` and `password` files in the `manifests/secret` directory.
 ```
-$ kubectl create secret generic  file-example --from-file=manifests/secret/username --from-file=manifests/secret/password
+kubectl create secret generic  file-example --from-file=manifests/secret/username --from-file=manifests/secret/password
 ```
 
 View the created Secret.
 ```
-$ kubectl get secret file-example -o yaml
+kubectl get secret file-example -o yaml
 ```
 
 ---
@@ -457,7 +457,7 @@ spec:
 
 **Command**
 ```
-$ kubectl create -f manifests/secret-env-example.yaml
+kubectl create -f manifests/secret-env-example.yaml
 ```
 
 Note how the Environment Variable is injected using `valueFrom` and `secretKeyRef`. This queries a specific key
@@ -465,12 +465,12 @@ from the Secret and injects it as an Environment Variable.
 
 2) List the Pods.
 ```
-$ kubectl get pods
+kubectl get pods
 ```
 
 3) Copy the pod name and view the output of the Job.
 ```
-$ kubectl logs secret-env-example-<pod-id>
+kubectl logs secret-env-example-<pod-id>
 ```
 It should echo the value from the `manifest-example` Secret `username` key-value pair.
 
@@ -503,17 +503,17 @@ spec:
 
 **Command**
 ```
-$ kubectl create -f manifests/secret-cmd-example.yaml
+kubectl create -f manifests/secret-cmd-example.yaml
 ```
 
 5) List the Pods.
 ```
-$ kubectl get pods
+kubectl get pods
 ```
 
 3) Copy the pod name of the `secret-cmd-example` job and view the output of the Pod.
 ```
-$ kubectl logs secret-cmd-example-<pod-id>
+kubectl logs secret-cmd-example-<pod-id>
 ```
 It should echo the string "Hello there <data[username]>!" referencing the value from the `manifest-example` Secret.
 
@@ -577,7 +577,7 @@ spec:
 
 **Command**
 ```
-$ kubectl create -f manifests/secret-vol-example.yaml
+kubectl create -f manifests/secret-vol-example.yaml
 ```
 
 Note the volumes and how they are being referenced. The volume `password`, has an array of `items` that contains a
@@ -586,26 +586,26 @@ possible to override the name or path to the generated file by supplying an argu
 
 2) View the contents of the `/mysecret` volume mount.
 ```
-$ kubectl exec secret-vol-example -- ls /mysecret
+kubectl exec secret-vol-example -- ls /mysecret
 ```
 It will contain two files, matching the names of the keys stored in Secret `manifest-example`.
 
 3) `cat` the contents of the files.
 ```
-$ kubectl exec secret-vol-example -- /bin/sh -c "cat /mysecret/*"
+kubectl exec secret-vol-example -- /bin/sh -c "cat /mysecret/*"
 ```
 It will match the values stored in the Secret `manifest-example` concatenated together.
 
 4) View the contents of the other Volume Mount `mypass`.
 ```
-$ kubectl exec secret-vol-example -- ls /mypass
+kubectl exec secret-vol-example -- ls /mypass
 ```
 A file will be present that represents the single item being referenced in the `password` volume. This file bears the
 name `supersecretpass` as specified by the `path` variable.
 
 5) `cat` contents of the `supersecretpass` file.
 ```
-$ kubectl exec secret-vol-example -- cat /mypass/supersecretpass
+kubectl exec secret-vol-example -- cat /mypass/supersecretpass
 ```
 The contents should match the value of data[password].
 

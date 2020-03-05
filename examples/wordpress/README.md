@@ -16,7 +16,7 @@ production deployment. For a more production ready deployment, see the [WordPres
 
 1. Create the Secret used for the MySQL root account:
 ```
-$ kubectl create -f manifests/secret-mysql.yaml 
+kubectl create -f manifests/secret-mysql.yaml 
 ```
 
 * **[manifests/secret-mysql.yaml](manifests/secret-mysql.yaml)** - Contains a base64 encoded string to serve as the
@@ -25,7 +25,7 @@ $ kubectl create -f manifests/secret-mysql.yaml
 
 2. Create the MySQL [StatefulSet](manifests/sts-mysql.yaml) and its associated [service](manifests/svc-mysql.yaml).
 ```
-$ kubectl create \
+kubectl create \
   -f manifests/sts-mysql.yaml \
   -f manifests/svc-mysql.yaml
 ```
@@ -39,20 +39,20 @@ dynamically provision a volume.
 
 3. Wait for the Pod to be up and running:
 ```
-$ kubectl get pods --watch
+kubectl get pods --watch
 ```
 
 3. With MySQL up and running, WordPress can now be provisioned. Start by Creating the 
    [PVC](manifests/pvc-wordpress.yaml) used to store WordPress's internal data.
 ```
-$ kubectl create -f manifests/pvc-wordpress.yaml
+kubectl create -f manifests/pvc-wordpress.yaml
 ```
 * **[manifests/pvc-wordpress.yaml](manifests/pvc-wordpress.yaml)** - The Persistent Volume Claim used for the WordPress
   pod's own internal storage.
 
 4. Now create the WordPress deployment and its associated Service.
 ```
-$ kubectl create \
+kubectl create \
     -f manifests/dep-wordpress.yaml \
     -f manifests/svc-wordpress.yaml
 ```
@@ -63,7 +63,7 @@ $ kubectl create \
 
 5. Wait for the Pods to be up and running:
 ```
-$ kubectl get pods --watch
+kubectl get pods --watch
 ```
 
 6. With both MySQL and WordPress up and running, use the `minikube service` command to access the WordPress deployment.
@@ -79,8 +79,8 @@ give it a go!
 ## Clean Up
 
 ```
-$ kubectl delete -f manifests/
-$ kubectl delete pvc mysql-data-mysql-0
+kubectl delete -f manifests/
+kubectl delete pvc mysql-data-mysql-0
 ```
 
 [wordpress]: https://wordpress.org/

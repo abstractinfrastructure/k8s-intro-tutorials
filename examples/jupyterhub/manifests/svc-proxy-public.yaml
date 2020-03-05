@@ -10,6 +10,6 @@ spec:
   ports:
   - name: http
     nodePort: 32020
-    port: 80
+    port: 8081
     protocol: TCP
-    targetPort: 80
+    targetPort: 8081

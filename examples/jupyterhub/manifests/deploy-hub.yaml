@@ -35,7 +35,7 @@ spec:
               name: hub-secret
         ports:
         - name: hub
-          containerPort: 8081
+          containerPort: 808181
           protocol: TCP
         resources:
           requests:

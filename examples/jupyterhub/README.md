@@ -24,7 +24,7 @@ automatically. Together they make for a fairly seamless Jupyter experience.
 
 Create the service accounts and rbac policies with the below command.
 ```
-$ kubectl create -f manifests/rbac.yaml
+kubectl create -f manifests/rbac.yaml
 ```
 
 **NOTE:** RBAC is out of scope for the introductory tutorials, however they're required for both the Hub and Proxy to
@@ -37,7 +37,7 @@ be able to communicate with the Kubernetes API. If you are interested at explori
 
 1. Create the 3 ConfigMaps:
 ```
-$ kubectl create \
+kubectl create \
   -f manifests/cm-hub-config.yaml \
   -f manifests/cm-ingress.yaml \
   -f manifests/cm-nginx.yaml
@@ -50,17 +50,17 @@ $ kubectl create \
 
 2. Create the [secret](manifests/secret-hub.yaml) used by the Proxy to authenticate to the Hub.
 ```
-$ kubectl create -f manifests/secret-hub.yaml
+kubectl create -f manifests/secret-hub.yaml
 ```
 
 3. Create the [PVC](manifests/pvc-hub.yaml) used by the Hub to store it's internal database.
 ```
-$ kubectl create -f manifests/pvc-hub.yaml
+kubectl create -f manifests/pvc-hub.yaml
 ```
 
 4. Now create the 4 services used by both the Hub and Proxy:
 ```
-$ kubectl create \
+kubectl create \
   -f manifests/svc-hub.yaml \
   -f manifests/svc-proxy-api.yaml \
   -f manifests/svc-proxy-http.yaml \
@@ -78,7 +78,7 @@ $ kubectl create \
 
 5. With everything else provisioned, the two deployments for the Hub Server and Proxy may now be created.
 ```
-$ kubectl create \
+kubectl create \
  -f manifests/deploy-hub.yaml \
  -f manifests/deploy-proxy.yaml
 ```
@@ -88,7 +88,7 @@ $ kubectl create \
 
 6. Wait for the Pods to be up and running:
 ```
-$ kubectl get pods --watch
+kubectl get pods --watch
 ```
 **NOTE:** It is common for the Hub Server to restart at least once.
 
@@ -101,7 +101,7 @@ $ minikube service proxy-public
 
 8. Watch the Pods once again.
 ```
-$ kubectl get pods --watch
+kubectl get pods --watch
 ```
 There will be Pod spinning up with the name `jupyter-admin`. This is the dynamically provisioned notebook server being
   spun up. 
@@ -113,9 +113,9 @@ With that you should have a fully functional instance of the JupyterHub provisio
 ## Clean Up
 
 ```
-$ kubectl delete -f manifests/
-$ kubectl delete pod jupyter-admin
-$ kubectl delete pvc claim-admin
+kubectl delete -f manifests/
+kubectl delete pod jupyter-admin
+kubectl delete pvc claim-admin
 ```
 
 [hub]: https://jupyterhub.readthedocs.io/en/latest/

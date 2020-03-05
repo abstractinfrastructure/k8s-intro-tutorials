@@ -44,10 +44,10 @@ kubectl <command> <type> <name> <flags>
 
 **Examples**
 ```
-$ kubectl create -f mypod.yaml
-$ kubectl get pods
-$ kubectl get pod mypod
-$ kubectl delete pod mypod
+kubectl create -f mypod.yaml
+kubectl get pods
+kubectl get pod mypod
+kubectl delete pod mypod
 ```
 
 ---
@@ -75,12 +75,12 @@ This config is viewable without having to view the file directly.
 
 **Command**
 ```
-$ kubectl config view
+kubectl config view
 ```
 
 **Example**
 ```yaml
-$ kubectl config view
+kubectl config view
 apiVersion: v1
 clusters:
 - cluster:
@@ -130,13 +130,13 @@ Kubernetes documentation.
 
 1. View the current contexts.
 ```
-$ kubectl config get-contexts
+kubectl config get-contexts
 ```
 
 2. Create a new context called `minidev` within the `minikube` cluster with the `dev` namespace, as the
 `minikube` user.
 ```
-$ kubectl config set-context minidev --cluster=minikube --user=minikube --namespace=dev
+kubectl config set-context minidev --cluster=minikube --user=minikube --namespace=dev
 ```
 
 3. View the newly added context.
@@ -146,12 +146,12 @@ kubectl config get-contexts
 
 4. Switch to the `minidev` context using `use-context`.
 ```
-$ kubectl config use-context minidev
+kubectl config use-context minidev
 ```
 
 5. View the current active context.
 ```
-$ kubectl config current-context
+kubectl config current-context
 ```
 
 ---
@@ -189,7 +189,7 @@ kubectl get <type> <name> -o <output format>
 
 **Examples**
 ```
-$ kubectl get namespaces
+kubectl get namespaces
 NAME          STATUS    AGE
 default       Active    4h
 kube-public   Active    4h
@@ -215,10 +215,10 @@ kubectl create -f <path to manifest>
 
 **Examples**
 ```
-$ kubectl create namespace dev
+kubectl create namespace dev
 namespace "dev" created
 $
-$ kubectl create -f manifests/mypod.yaml
+kubectl create -f manifests/mypod.yaml
 pod "mypod" created
 ```
 
@@ -241,7 +241,7 @@ kubectl apply -f <path to manifest>
 
 **Examples**
 ```
-$ kubectl apply -f manifests/mypod.yaml
+kubectl apply -f manifests/mypod.yaml
 Warning: kubectl apply should be used on resource created by either kubectl create --save-config or kubectl apply
 pod "mypod" configured
 ```
@@ -256,7 +256,7 @@ will essentially be untracked.
 
 **Command**
 ```
-$ kubectl edit <type> <object name>
+kubectl edit <type> <object name>
 ```
 
 **Examples**
@@ -277,7 +277,7 @@ kubectl delete <type> <name>
 
 **Examples**
 ```
-$ kubectl delete pod mypod
+kubectl delete pod mypod
 pod "mypod" deleted
 ```
 
@@ -295,7 +295,7 @@ kubectl describe <type> <name>
 
 **Examples**
 ```
-$ kubectl describe pod mypod
+kubectl describe pod mypod
 Name:         mypod
 Namespace:    dev
 Node:         minikube/192.168.99.100
@@ -307,7 +307,7 @@ IP:           172.17.0.6
 Containers:
   nginx:
     Container ID:   docker://5a0c100de6599300b1565e73e64e8917f9a4f4b06325dc4890aad980d582cf04
-    Image:          nginx:stable-alpine
+    Image:          twalter/openshift-nginx
     Image ID:       docker-pullable://nginx@sha256:db5acc22920799fe387a903437eb89387607e5b3f63cf0f4472ac182d7bad644
     Port:           80/TCP
     State:          Running
@@ -335,7 +335,7 @@ Events:
   ----    ------                 ----  ----               -------
   Normal  Scheduled              5s    default-scheduler  Successfully assigned mypod to minikube
   Normal  SuccessfulMountVolume  5s    kubelet, minikube  MountVolume.SetUp succeeded for volume "default-token-s2xd7"
-  Normal  Pulled                 5s    kubelet, minikube  Container image "nginx:stable-alpine" already present on machine
+  Normal  Pulled                 5s    kubelet, minikube  Container image "twalter/openshift-nginx" already present on machine
   Normal  Created                5s    kubelet, minikube  Created container
   Normal  Started                5s    kubelet, minikube  Started container
   ```
@@ -354,7 +354,7 @@ kubectl logs <pod name> -c <container name>
 
 **Examples**
 ```
-$ kubectl logs mypod
+kubectl logs mypod
 172.17.0.1 - - [10/Mar/2018:18:14:15 +0000] "GET / HTTP/1.1" 200 612 "-" "curl/7.57.0" "-"
 172.17.0.1 - - [10/Mar/2018:18:14:17 +0000] "GET / HTTP/1.1" 200 612 "-" "curl/7.57.0" "-"
 ```
@@ -432,7 +432,7 @@ kubectl exec  -it <pod name> -c <container name> -- <arg>
 
 **Example**
 ```
-$ kubectl exec mypod -c nginx -- printenv
+kubectl exec mypod -c nginx -- printenv
 PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
 HOSTNAME=mypod
 KUBERNETES_SERVICE_PORT_HTTPS=443
@@ -446,7 +446,7 @@ KUBERNETES_SERVICE_PORT=443
 NGINX_VERSION=1.12.2
 HOME=/root
 $
-$ kubectl exec -i -t mypod -c nginx -- /bin/sh
+kubectl exec -i -t mypod -c nginx -- /bin/sh
 / #
 / # cat /etc/alpine-release
 3.5.2
@@ -461,23 +461,23 @@ $ kubectl exec -i -t mypod -c nginx -- /bin/sh
 
 1) If not already created, create the Pod `mypod` from the manifest `manifests/mypod.yaml`.
 ```
-$ kubectl create -f manifests/mypod.yaml
+kubectl create -f manifests/mypod.yaml
 ```
 
 2) Wait for the Pod to become ready (`running`).
 ```
-$ kubectl get pods --watch
+kubectl get pods --watch
 ```
 
 3) Use `kubectl exec` to `cat` the file `/etc/os-release`.
 ```
-$ kubectl exec mypod -- cat /etc/os-release
+kubectl exec mypod -- cat /etc/os-release
 ```
 It should output the contents of the `os-release` file.
 
 4) Now use `kubectl exec` and supply the `-i -t` flags to spawn a shell session within the container.
 ```
-$ kubectl exec -i -t mypod -- /bin/sh
+kubectl exec -i -t mypod -- /bin/sh
 ```
 If executed correctly, it should drop you into a new shell session within the nginx container.
 
@@ -512,7 +512,7 @@ kubectl proxy --port=<port>
 
 **Examples**
 ```
-$ kubectl proxy
+kubectl proxy
 Starting to serve on 127.0.0.1:8001
 
 <from another terminal>
@@ -580,12 +580,12 @@ $ minikube dashboard
 
 1) Create the Pod `mypod` from the manifest `manifests/mypod.yaml`. (if not created previously)
 ```
-$ kubectl create -f manifests/mypod.yaml
+kubectl create -f manifests/mypod.yaml
 ```
 
 2) Start the `kubectl proxy` with the defaults.
 ```
-$ kubectl proxy
+kubectl proxy
 ```
 
 3) Access the Pod through the proxy.
@@ -621,7 +621,7 @@ external IP, or create firewall rules is an incredibly useful tool for troublesh
 ## Cleaning up
 **NOTE:** If you are proceeding with the next tutorials, simply delete the pod with:
 ```
-$ kubectl delete pod mypod
+kubectl delete pod mypod
 ```
 The namespace and context will be reused. 
 

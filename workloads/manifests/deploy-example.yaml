@@ -20,8 +20,8 @@ spec:
     spec:
       containers:
       - name: nginx
-        image: nginx:stable-alpine
+        image: twalter/openshift-nginx
         ports:
-        - containerPort: 80
+        - containerPort: 8081
 
 
