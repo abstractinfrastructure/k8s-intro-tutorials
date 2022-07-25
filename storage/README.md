@@ -29,31 +29,17 @@ For this task we have Volumes, Persistent Volumes, Persistent Volume Claims, and
 
 # Before you Begin
 
-Minikube comes with a default storage class provisioner that can get in the way when trying to explore how storage
+Kind comes with a default storage class provisioner that can get in the way when trying to explore how storage
 is used within a Kubernetes cluster. For these exercises, it should be disabled.
 
 ```
-$ minikube addons disable default-storageclass
-$ kubectl delete sc standard
-```
-
-**Attention Windows Users:** There is a  [known issue with minikube and enabling/disabling
-addons](https://github.com/kubernetes/minikube/issues/2281). If you encounter an error with the above command, execute
-the following:
-```
-$ minikube ssh 'sudo mv /etc/kubernetes/manifests/addon-manager.yaml /etc/kubernetes/addon-manager.yaml'
-$ kubectl delete pod storage-provisioner -n kube-system
-$ kubectl delete sc standard
+$ kubectl annotate --overwrite sc standard  storageclass.kubernetes.io/is-default-class="false"
 ```
 
 
 When done, re-enabling the default-storageclass will automatically turn it back on.
 ```
-$ minikube addons enable default-storageclass
-```
-or if you had to perform the windows workaround, execute this:
-```
-$ minikube ssh 'sudo mv /etc/kubernetes/addon-manager.yaml /etc/kubernetes/manifests/addon-manager.yaml'
+$ kubectl annotate --overwrite sc standard  storageclass.kubernetes.io/is-default-class="true"
 ```
 
 ---
@@ -542,25 +528,17 @@ via a Storage Class.
 
 ---
 
-1) Re-enable the minikube default-storageclass, and wait for it to become available
+1) Re-enable the kind default-storageclass, and wait for it to become available
 ```
-$ minikube addons enable default-storageclass
-$ kubectl get sc --watch
+$ kubectl annotate --overwrite sc standard  storageclass.kubernetes.io/is-default-class="true"
 ```
-or if you had to perform the windows workaround, execute this:
-```
-$ minikube ssh 'sudo mv /etc/kubernetes/addon-manager.yaml /etc/kubernetes/manifests/addon-manager.yaml'
-$ kubectl get sc --watch
-```
-
-You should see Storage Class `standard` become available after a few moments.
 
 2) Describe the new Storage Class
 ```
 $ kubectl describe sc standard
 ```
 Note the fields `IsDefaultClass`, `Provisioner`, and `ReclaimPolicy`. The `Provisioner` attribute references the
-_"driver"_ for the Storage Class. Minikube comes with it's own driver `k8s.io/minikube-hostpath` that simply mounts
+_"driver"_ for the Storage Class. Kind comes with it's own driver `rancher.io/local-path` that simply mounts
 a hostpath from within the VM as a Volume.
 
 3) Create PVC `pvc-standard` from the manifest `manifests/pvc-standard.yaml` or use the yaml below.

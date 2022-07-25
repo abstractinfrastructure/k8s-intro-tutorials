@@ -34,7 +34,7 @@ $ kubectl create \
 * **[manifests/svc-mysql.yaml](manifests/svc-mysql.yaml)** - Associated MySQL Service.
 
 **NOTE:** The MySQL StatefulSet does not require a PVC to be created ahead of time for its storage. Instead, it uses
-the `volumeClaimTemplates` StatefulSet feature in combination with the default StorageClass provided by Minikube to
+the `volumeClaimTemplates` StatefulSet feature in combination with the default StorageClass provided by Kind to
 dynamically provision a volume.
 
 3. Wait for the Pod to be up and running:
@@ -66,9 +66,10 @@ $ kubectl create \
 $ kubectl get pods --watch
 ```
 
-6. With both MySQL and WordPress up and running, use the `minikube service` command to access the WordPress deployment.
+6. With both MySQL and WordPress up and running, visit the IP:Port combo from the command below in a browser to access 
+the WordPress deployment.
 ```
-$ minikube service wordpress
+$ echo $(docker inspect -f '{{.NetworkSettings.Networks.kind.IPAddress}}' kind-control-plane):80
 ```
 
 At this point, you should see the WordPress default installation and configuration page. You can configure it and
