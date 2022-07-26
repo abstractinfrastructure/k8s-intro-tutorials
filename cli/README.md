@@ -22,7 +22,6 @@ is essential to using Kubernetes itself.
   * [kubectl exec](#kubectl-exec)
   * [Exercise: Executing Commands within a Remote Pod](#exercise-executing-commands-within-a-remote-pod)
   * [kubectl proxy](#kubectl-proxy)
-  * [Dashboard](#dashboard)
   * [Exercise: Using the Proxy](#exercise-using-the-proxy)
 * [Cleaning up](#cleaning-up)
 * [Helpful Resources](#helpful-resources)
@@ -80,31 +79,27 @@ $ kubectl config view
 
 **Example**
 ```yaml
-$ kubectl config view
+❯ kubectl config view
 apiVersion: v1
 clusters:
 - cluster:
-    certificate-authority: /Users/example/.minikube/ca.crt
-    server: https://192.168.99.100:8443
-  name: minikube
+    certificate-authority-data: DATA+OMITTED
+    server: https://127.0.0.1:46347
+  name: kind-kind
 contexts:
 - context:
-    cluster: minikube
-    namespace: dev
-    user: minikube
-  name: minidev
-- context:
-    cluster: minikube
-    user: minikube
-  name: minikube
-current-context: minidev
+    cluster: kind-kind
+    user: kind-kind
+  name: kind-kind
+current-context: kind-kind
 kind: Config
 preferences: {}
 users:
-- name: minikube
+- name: kind-kind
   user:
-    client-certificate: /Users/example/.minikube/client.crt
-    client-key: /Users/example/.minikube/client.key
+    client-certificate-data: REDACTED
+    client-key-data: REDACTED
+
 ```
 
 ---
@@ -124,7 +119,7 @@ Kubernetes documentation.
 ---
 
 ### Exercise: Using Contexts
-**Objective:** Create a new context called `minidev` and switch to it.
+**Objective:** Create a new context called `kind-dev` and switch to it.
 
 ---
 
@@ -133,10 +128,10 @@ Kubernetes documentation.
 $ kubectl config get-contexts
 ```
 
-2. Create a new context called `minidev` within the `minikube` cluster with the `dev` namespace, as the
-`minikube` user.
+2. Create a new context called `kind-dev` within the `kind-kind` cluster with the `dev` namespace, as the
+`kind-kind` user.
 ```
-$ kubectl config set-context minidev --cluster=minikube --user=minikube --namespace=dev
+$ kubectl config set-context kind-dev --cluster=kind-kind --user=kind-kind --namespace=dev
 ```
 
 3. View the newly added context.
@@ -144,9 +139,9 @@ $ kubectl config set-context minidev --cluster=minikube --user=minikube --namesp
 kubectl config get-contexts
 ```
 
-4. Switch to the `minidev` context using `use-context`.
+4. Switch to the `kind-dev` context using `use-context`.
 ```
-$ kubectl config use-context minidev
+$ kubectl config use-context kind-dev
 ```
 
 5. View the current active context.
@@ -197,7 +192,7 @@ kube-system   Active    4h
 $
 $kubectl get pod mypod -o wide
 NAME      READY     STATUS    RESTARTS   AGE       IP           NODE
-mypod     1/1       Running   0          5m        172.17.0.6   minikube
+mypod     1/1       Running   0          5m        172.17.0.6   kind-control-plane
 ```
 
 ---
@@ -298,7 +293,7 @@ kubectl describe <type> <name>
 $ kubectl describe pod mypod
 Name:         mypod
 Namespace:    dev
-Node:         minikube/192.168.99.100
+Node:         kind-control-plane/192.168.99.100
 Start Time:   Sat, 10 Mar 2018 13:12:53 -0500
 Labels:       <none>
 Annotations:  kubectl.kubernetes.io/last-applied-configuration={"apiVersion":"v1","kind":"Pod","metadata":{"annotations":{},"name":"mypod","namespace":"dev"},"spec":{"containers":[{"image":...
@@ -333,11 +328,11 @@ Tolerations:     <none>
 Events:
   Type    Reason                 Age   From               Message
   ----    ------                 ----  ----               -------
-  Normal  Scheduled              5s    default-scheduler  Successfully assigned mypod to minikube
-  Normal  SuccessfulMountVolume  5s    kubelet, minikube  MountVolume.SetUp succeeded for volume "default-token-s2xd7"
-  Normal  Pulled                 5s    kubelet, minikube  Container image "nginx:stable-alpine" already present on machine
-  Normal  Created                5s    kubelet, minikube  Created container
-  Normal  Started                5s    kubelet, minikube  Started container
+  Normal  Scheduled              5s    default-scheduler  Successfully assigned mypod to kind-control-plane
+  Normal  SuccessfulMountVolume  5s    kubelet, kind-control-plane  MountVolume.SetUp succeeded for volume "default-token-s2xd7"
+  Normal  Pulled                 5s    kubelet, kind-control-plane  Container image "nginx:stable-alpine" already present on machine
+  Normal  Created                5s    kubelet, kind-control-plane  Created container
+  Normal  Started                5s    kubelet, kind-control-plane  Started container
   ```
 
 ---
@@ -365,7 +360,7 @@ $ kubectl logs mypod
 **Objective:** Explore the basics. Create a namespace, a pod, then use the `kubectl` commands to describe and delete
 what was created.
 
-**NOTE:** You should still be using the `minidev` context created earlier.
+**NOTE:** You should still be using the `kind-dev` context created earlier.
 
 ---
 
@@ -546,35 +541,12 @@ http://<proxy_address>/api/v1/namespaces/<namespace>/<services|pod>/<service_nam
 **Example**
 ```
 http://127.0.0.1:8001/api/v1/namespaces/default/pods/mypod/proxy/
-http://127.0.0.1:8001/api/v1/namespaces/kube-system/services/kubernetes-dashboard/proxy/
-```
----
-
-### Dashboard
-
-While the Kubernetes Dashboard is not something that is required to be deployed in a cluster, it frequently is and is
-a handy tool to quickly explore the system. **However**, it should not be relied upon for cluster support.
-
-![Kubernetes Dashboard](images/dashboard.png)
-
-To access the dashboard use the `kubectl proxy` command and access the `kubernetes-dashboard` service within the
-`kube-system` namespace.
-```
-http://127.0.0.1:8001/api/v1/namespaces/kube-system/services/kubernetes-dashboard/proxy/
-```
-
-Leaving the proxy up and going may not be desirable for quick dev-work. Minikube itself has a command that will
-open the dashboard up in a new browser window through an exposed service on the Minikube VM.
-
-**Command**
-```
-$ minikube dashboard
 ```
 
 ---
 
 ### Exercise: Using the Proxy
-**Objective:** Examine the capabilities of the proxy by accessing a pod's exposed ports and using the dashboard.
+**Objective:** Examine the capabilities of the proxy by accessing a pod's exposed ports.
 
 ---
 
@@ -593,18 +565,6 @@ $ kubectl proxy
 http://127.0.0.1:8001/api/v1/namespaces/dev/pods/mypod/proxy/
 ```
 You should see the "Welcome to nginx!" page.
-
-
-4) Access the Dashboard through the proxy.
-```
-http://127.0.0.1:8001/api/v1/namespaces/kube-system/services/kubernetes-dashboard/proxy/
-```
-
-5) Lastly, stop the proxy (`CTRL+C`) and access the Dashboard through minikube.
-```
-$ minikube dashboard
-```
-Minikube offers a convenient shortcut to access the dashboard (without the proxy) for local development use.
 
 ---
 
@@ -628,7 +588,7 @@ The namespace and context will be reused.
 To remove everything that was created in this tutorial, execute the following commands:
 ```
 kubectl delete namespace dev
-kubectl config delete-context minidev
+kubectl config delete-context kind-dev
 ```
 
 ---

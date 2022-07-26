@@ -92,10 +92,10 @@ $ kubectl get pods --watch
 ```
 **NOTE:** It is common for the Hub Server to restart at least once.
 
-7. When ready, use `minikube service` to access the proxy-public service and login to JupyterHub with the credentials:
-  `admin/admin`.
+7. When ready, visit IP:Port output by the command below to access the proxy-public service in a browser and login to 
+JupyterHub with the credentials: `admin/admin`.
 ```
-$ minikube service proxy-public
+$ echo $(docker inspect -f '{{.NetworkSettings.Networks.kind.IPAddress}}' kind-control-plane):32020
 ```
 **NOTE:** It may take some time for the service to actually become available. Refresh it once or twice within 30 seconds.
 

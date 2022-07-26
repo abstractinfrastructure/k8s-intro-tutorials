@@ -6,7 +6,7 @@ In **ALL CASES** a Pod Template is included, and acts as the base tier of manage
 
 **Note:** 
 1) If you are coming directly from the previous tutorials (core), you may still be configured to use the
-`minidev` context. Switch to the `minikube` context before proceeding with the rest of the tutorials.
+`kind-dev` context. Switch to the `kind-kind` context before proceeding with the rest of the tutorials.
 
 2) Unlike some of the other tutorials, the workload exercises should be cleaned up before moving onto the next
  workload type. The clean-up commands will included after **Summary** section of the exercise.
@@ -418,9 +418,9 @@ $ kubectl get daemonset
 ```
 As there are no matching nodes, no Pods should be scheduled.
 
-3) Label the `minikube` node with `nodeType=edge`
+3) Label the `kind-control-plane` node with `nodeType=edge`
 ```
-$ kubectl label node minikube nodeType=edge
+$ kubectl label node kind-control-plane nodeType=edge
 ```
 
 4) View the current DaemonSets once again.
@@ -851,7 +851,7 @@ This schedule is **UTC ONLY**.
 
 **manifests/cronjob-example.yaml**
 ```yaml
-apiVersion: batch/v1beta1
+apiVersion: batch/v1
 kind: CronJob
 metadata:
   name: cronjob-example

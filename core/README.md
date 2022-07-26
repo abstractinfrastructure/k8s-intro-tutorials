@@ -43,15 +43,15 @@ $ kubectl get namespaces
 $ kubectl create namespace dev
 ```
 
-3) Create a new context called `minidev` within the `minikube` cluster  as the `minikube` user, with the namespace
+3) Create a new context called `kind-dev` within the `kind-kind` cluster as the `kind-kind` user, with the namespace
  set to `dev`.
 ```
-$ kubectl config set-context minidev --cluster=minikube --user=minikube --namespace=dev
+$ kubectl config set-context kind-dev --cluster=kind-kind --user=kind-kind --namespace=dev
 ```
 
 4) Switch to the newly created context.
 ```
-$ kubectl config use-context minidev
+$ kubectl config use-context kind-dev
 ```
 
 ---
@@ -397,9 +397,9 @@ additionally has a `NodePort`.
 $ kubectl describe service nodeport
 ```
 
-3) Use the `minikube service` command to open the newly exposed `nodeport` Service in a browser.
+3) Run the below command to get the Kind Cluster's IP address and visit it in a browser.
 ```
-$ minikube service -n dev nodeport
+$ echo $(docker inspect -f '{{.NetworkSettings.Networks.kind.IPAddress}}' kind-control-plane):32410
 ```
 
 4) Lastly, verify that the generated DNS record has been created for the Service by using nslookup within
@@ -428,16 +428,26 @@ cloud provider which will likely already be integrated with your cluster.
 For bare-metal and on prem deployments, this must be handled yourself. There are several available tools and products
 that can do this, but for this example the Google [metalLB](https://github.com/google/metallb) provider will be used.
 
-**NOTE:** If you are **NOT** using the default virtualbox deployment of Minikube, or using it with a different default
-IP range. Edit the manifest `manifests/metalLB.yaml` and change the cidr range on line 20 (`192.168.99.224/28`) to
+**NOTE:**  We need to provide metallb a range of IP addresses it controls. We want this range to be on the docker kind 
+network. 
+
+```
+$ docker network inspect -f '{{.IPAM.Config}}' kind
+```
+
+The output will contain a cidr such as 172.18.0.0/16. We want our loadbalancer IP range to come from this subclass. 
+We can configure metallb, for instance, to use 172.18.255.200 to 172.18.255.250 by creating the configmap.
+
+Edit the manifest `manifests/metalLB.yaml` and change the cidr range on line 19 (`172.18.255.200-172.18.255.250`) to
 fit your requirements. Otherwise go ahead and deploy it.
+
 ```
 $ kubectl create -f manifests/metalLB.yaml
 ```
 
 1) Create a `LoadBalancer` Service called `loadbalancer` that targets pods with the labels `app=nginx` and
 `environment=prod` forwarding as port `80`. Use either the yaml below, or the manifest
-`manifests/service--loadbalancer.yaml`.
+`manifests/service-loadbalancer.yaml`.
 
 **manifests/service-loadbalancer.yaml**
 ```yaml
@@ -470,13 +480,7 @@ $ kubectl describe service loadbalancer
 3) Open a browser and visit the IP noted in the `Loadbalancer Ingress` field. It should directly map to the exposed
 Service.
 
-4) Use the `minikube service` command to open the `NodePort` portion of the `loadbalancer` Service in a new browser
-window.
-```
-$ minikube service -n dev loadbalancer
-```
-
-5) Finally, verify that the generated DNS record has been created for the Service by using nslookup within the
+4) Finally, verify that the generated DNS record has been created for the Service by using nslookup within the
 `example-pod` Pod.
 ```
 $ kubectl exec pod-example -- nslookup loadbalancer.dev.svc.cluster.local
@@ -532,8 +536,8 @@ To remove everything that was created in this tutorial, execute the following co
 ```
 kubectl delete namespace dev
 kubectl delete -f manifests/metalLB.yaml
-kubectl config delete-context minidev
-kubectl config use-context minikube
+kubectl config delete-context kind-dev
+kubectl config use-context kind-kind
 ```
 
 ---
