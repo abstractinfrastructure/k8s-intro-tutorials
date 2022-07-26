@@ -181,11 +181,11 @@ spec:
     storage: 2Gi
   accessModes:
     - ReadWriteMany
-  persistentVolumeReclaimPolicy: Delete
   storageClassName: mypvsc
+  persistentVolumeReclaimPolicy: Delete
   hostPath:
     type: DirectoryOrCreate
-    path: "/data/mypvsc"
+    path: "/tmp/mypvsc"
 ```
 
 **Command**
@@ -249,9 +249,10 @@ spec:
     storage: 2Gi
   accessModes:
     - ReadWriteMany
+  persistentVolumeReclaimPolicy: Retain
   hostPath:
     type: DirectoryOrCreate
-    path: "/data/mypvselector"
+    path: "/tmp/mypvselector"
 ```
 
 **Command**

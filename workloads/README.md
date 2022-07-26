@@ -54,7 +54,7 @@ configure the labels and selectors to target `app=nginx` and `env=prod`. The yam
 apiVersion: apps/v1
 kind: ReplicaSet
 metadata:
-  name: example-rs
+  name: rs-example
 spec:
   replicas: 3
   selector:
@@ -183,7 +183,7 @@ and Pod.
 `manifests/deploy-example.yaml`. Additionally pass the `--record` flag to `kubectl` when you create the Deployment. 
 The `--record` flag saves the command as an annotation, and it can be thought of similar to a git commit message.
 
-**manifests/deployment-example.yaml**
+**manifests/deploy-example.yaml**
 ```yaml
 apiVersion: apps/v1
 kind: Deployment
