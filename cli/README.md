@@ -33,7 +33,7 @@ is essential to using Kubernetes itself.
 `kubectl` uses a common syntax for all operations in the form of:
 
 ```
-kubectl <command> <type> <name> <flags>
+$ kubectl <command> <type> <name> <flags>
 ```
 
 * **command** - The command or operation to perform. e.g. `apply`, `create`, `delete`, and `get`.
@@ -42,7 +42,7 @@ kubectl <command> <type> <name> <flags>
 * **flags** - Optional flags to pass to the command.
 
 **Examples**
-```
+```sh
 $ kubectl create -f mypod.yaml
 $ kubectl get pods
 $ kubectl get pod mypod
@@ -73,8 +73,8 @@ systems, the `kubeconfig` is stored in `$HOME/.kube/config` for Windows, it can 
 This config is viewable without having to view the file directly.
 
 **Command**
-```
-$ kubectl config view
+```sh
+kubectl config view
 ```
 
 **Example**
@@ -99,7 +99,6 @@ users:
   user:
     client-certificate-data: REDACTED
     client-key-data: REDACTED
-
 ```
 
 ---
@@ -124,29 +123,29 @@ Kubernetes documentation.
 ---
 
 1. View the current contexts.
-```
-$ kubectl config get-contexts
+```sh
+kubectl config get-contexts
 ```
 
 2. Create a new context called `kind-dev` within the `kind-kind` cluster with the `dev` namespace, as the
 `kind-kind` user.
-```
-$ kubectl config set-context kind-dev --cluster=kind-kind --user=kind-kind --namespace=dev
+```sh
+kubectl config set-context kind-dev --cluster=kind-kind --user=kind-kind --namespace=dev
 ```
 
 3. View the newly added context.
-```
+```sh
 kubectl config get-contexts
 ```
 
 4. Switch to the `kind-dev` context using `use-context`.
-```
-$ kubectl config use-context kind-dev
+```sh
+kubectl config use-context kind-dev
 ```
 
 5. View the current active context.
-```
-$ kubectl config current-context
+```sh
+kubectl config current-context
 ```
 
 ---
@@ -176,21 +175,21 @@ information in several different useful formats including: json, yaml, wide (add
 (names only) via the `-o` or `--output` flag.
 
 **Command**
-```
-kubectl get <type>
-kubectl get <type> <name>
-kubectl get <type> <name> -o <output format>
+```sh
+$ kubectl get <type>
+$ kubectl get <type> <name>
+$ kubectl get <type> <name> -o <output format>
 ```
 
 **Examples**
-```
+```sh
 $ kubectl get namespaces
 NAME          STATUS    AGE
 default       Active    4h
 kube-public   Active    4h
 kube-system   Active    4h
-$
-$kubectl get pod mypod -o wide
+
+$ kubectl get pod mypod -o wide
 NAME      READY     STATUS    RESTARTS   AGE       IP           NODE
 mypod     1/1       Running   0          5m        172.17.0.6   kind-control-plane
 ```
@@ -203,16 +202,16 @@ specified with the `-f` or  `--filename` flag that can point to either a file, o
 manifests.
 
 **Command**
-```
-kubectl create <type> <parameters>
-kubectl create -f <path to manifest>
+```sh
+$ kubectl create <type> <parameters>
+$ kubectl create -f <path to manifest>
 ```
 
 **Examples**
-```
+```sh
 $ kubectl create namespace dev
 namespace "dev" created
-$
+
 $ kubectl create -f manifests/mypod.yaml
 pod "mypod" created
 ```
@@ -230,12 +229,12 @@ documentation.
 Just like `kubectl create` it takes a json or yaml manifest with the `-f` flag or accepts input from `stdin`.
 
 **Command**
-```
-kubectl apply -f <path to manifest>
+```sh
+$ kubectl apply -f <path to manifest>
 ```
 
 **Examples**
-```
+```sh
 $ kubectl apply -f manifests/mypod.yaml
 Warning: kubectl apply should be used on resource created by either kubectl create --save-config or kubectl apply
 pod "mypod" configured
@@ -250,14 +249,14 @@ Variables. This command is useful for troubleshooting, but should be avoided in 
 will essentially be untracked.
 
 **Command**
-```
+```sh
 $ kubectl edit <type> <object name>
 ```
 
 **Examples**
-```
-kubectl edit pod mypod
-kubectl edit service myservice
+```sh
+$ kubectl edit pod mypod
+$ kubectl edit service myservice
 ```
 
 ---
@@ -266,12 +265,12 @@ kubectl edit service myservice
 `kubectl delete` deletes the object from Kubernetes.
 
 **Command**
-```
-kubectl delete <type> <name>
+```sh
+$ kubectl delete <type> <name>
 ```
 
 **Examples**
-```
+```sh
 $ kubectl delete pod mypod
 pod "mypod" deleted
 ```
@@ -283,14 +282,14 @@ pod "mypod" deleted
 troubleshooting tool.
 
 **Command**
-```
-kubectl describe <type>
-kubectl describe <type> <name>
+```sh
+$ kubectl describe <type>
+$ kubectl describe <type> <name>
 ```
 
 **Examples**
-```
-$ kubectl describe pod mypod
+```sh
+kubectl describe pod mypod
 Name:         mypod
 Namespace:    dev
 Node:         kind-control-plane/192.168.99.100
@@ -333,7 +332,7 @@ Events:
   Normal  Pulled                 5s    kubelet, kind-control-plane  Container image "nginx:stable-alpine" already present on machine
   Normal  Created                5s    kubelet, kind-control-plane  Created container
   Normal  Started                5s    kubelet, kind-control-plane  Started container
-  ```
+```
 
 ---
 
@@ -342,13 +341,13 @@ Events:
 `pod` the `-c` flag is used and the container name must be specified.
 
 **Command**
-```
-kubectl logs <pod name>
-kubectl logs <pod name> -c <container name>
+```sh
+$ kubectl logs <pod name>
+$ kubectl logs <pod name> -c <container name>
 ```
 
 **Examples**
-```
+```sh
 $ kubectl logs mypod
 172.17.0.1 - - [10/Mar/2018:18:14:15 +0000] "GET / HTTP/1.1" 200 612 "-" "curl/7.57.0" "-"
 172.17.0.1 - - [10/Mar/2018:18:14:17 +0000] "GET / HTTP/1.1" 200 612 "-" "curl/7.57.0" "-"
@@ -365,27 +364,27 @@ what was created.
 ---
 
 1) Create the `dev` namespace.
-```
+```sh
 kubectl create namespace dev
 ```
 
 2) Apply the manifest `manifests/mypod.yaml`.
-```
+```sh
 kubectl apply -f manifests/mypod.yaml
 ```
 
 3) Get the yaml output of the created pod `mypod`.
-```
+```sh
 kubectl get pod mypod -o yaml
 ```
 
 4) Describe the pod `mypod`.
-```
+```sh
 kubectl describe pod mypod
 ```
 
 5) Clean up the pod by deleting it.
-```
+```sh
 kubectl delete pod mypod
 ```
 
@@ -417,7 +416,7 @@ by the container name.
 If an interactive session is desired, the `-i` (`--stdin`) and `-t` (`--tty`) flags must be supplied.
 
 **Command**
-```
+```sh
 kubectl exec <pod name> -- <arg>
 kubectl exec <pod name> -c <container name> -- <arg>
 kubectl exec  -i -t <pod name> -c <container name> -- <arg>
@@ -426,8 +425,8 @@ kubectl exec  -it <pod name> -c <container name> -- <arg>
 
 
 **Example**
-```
-$ kubectl exec mypod -c nginx -- printenv
+```sh
+kubectl exec mypod -c nginx -- printenv
 PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
 HOSTNAME=mypod
 KUBERNETES_SERVICE_PORT_HTTPS=443
@@ -440,8 +439,8 @@ KUBERNETES_SERVICE_HOST=10.96.0.1
 KUBERNETES_SERVICE_PORT=443
 NGINX_VERSION=1.12.2
 HOME=/root
-$
-$ kubectl exec -i -t mypod -c nginx -- /bin/sh
+
+kubectl exec -i -t mypod -c nginx -- /bin/sh
 / #
 / # cat /etc/alpine-release
 3.5.2
@@ -455,29 +454,29 @@ $ kubectl exec -i -t mypod -c nginx -- /bin/sh
 ---
 
 1) If not already created, create the Pod `mypod` from the manifest `manifests/mypod.yaml`.
-```
-$ kubectl create -f manifests/mypod.yaml
+```sh
+kubectl create -f manifests/mypod.yaml
 ```
 
 2) Wait for the Pod to become ready (`running`).
-```
-$ kubectl get pods --watch
+```sh
+kubectl get pods --watch
 ```
 
 3) Use `kubectl exec` to `cat` the file `/etc/os-release`.
-```
-$ kubectl exec mypod -- cat /etc/os-release
+```sh
+kubectl exec mypod -- cat /etc/os-release
 ```
 It should output the contents of the `os-release` file.
 
 4) Now use `kubectl exec` and supply the `-i -t` flags to spawn a shell session within the container.
-```
-$ kubectl exec -i -t mypod -- /bin/sh
+```sh
+kubectl exec -i -t mypod -- /bin/sh
 ```
 If executed correctly, it should drop you into a new shell session within the nginx container.
 
 5) use `ps aux` to view the current processes within the container.
-```
+```sh
 / # ps aux
 ```
 There should be two nginx processes along with a `/bin/sh` process representing your interactive shell.
@@ -500,18 +499,18 @@ securely using `kubectl`. By default it creates a connection to the API-Server t
 
 
 **Command**
-```
+```sh
 kubectl proxy
 kubectl proxy --port=<port>
 ```
 
 **Examples**
-```
-$ kubectl proxy
+```sh
+kubectl proxy
 Starting to serve on 127.0.0.1:8001
 
 <from another terminal>
-$ curl 127.0.0.1:8001/version
+curl 127.0.0.1:8001/version
 {
   "major": "",
   "minor": "",
@@ -551,13 +550,13 @@ http://127.0.0.1:8001/api/v1/namespaces/default/pods/mypod/proxy/
 ---
 
 1) Create the Pod `mypod` from the manifest `manifests/mypod.yaml`. (if not created previously)
-```
-$ kubectl create -f manifests/mypod.yaml
+```sh
+kubectl create -f manifests/mypod.yaml
 ```
 
 2) Start the `kubectl proxy` with the defaults.
-```
-$ kubectl proxy
+```sh
+kubectl proxy
 ```
 
 3) Access the Pod through the proxy.
@@ -580,13 +579,13 @@ external IP, or create firewall rules is an incredibly useful tool for troublesh
 
 ## Cleaning up
 **NOTE:** If you are proceeding with the next tutorials, simply delete the pod with:
-```
-$ kubectl delete pod mypod
+```sh
+kubectl delete pod mypod
 ```
 The namespace and context will be reused. 
 
 To remove everything that was created in this tutorial, execute the following commands:
-```
+```sh
 kubectl delete namespace dev
 kubectl config delete-context kind-dev
 ```
